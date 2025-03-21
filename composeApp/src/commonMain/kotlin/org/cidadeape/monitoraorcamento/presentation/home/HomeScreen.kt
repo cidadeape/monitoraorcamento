@@ -63,9 +63,7 @@ fun HomeScreen(
             text = "VALORES EMPENHADOS EM 2025"
         )
 
-        Box(modifier = Modifier.padding(16.dp)) {
-            AutocompleteTextView(homeViewModel)
-        }
+        AutocompleteTextView(homeViewModel)
 
         val isRefreshing by remember { homeViewModel.refreshingState }
 
@@ -180,61 +178,65 @@ fun AutocompleteTextView(
     viewModel: HomeViewModel
 ) {
 
-    val fullListState = viewModel.fullList.collectAsState()
+    Column(
+        modifier = Modifier.fillMaxWidth().padding(16.dp)
+    ) {
+        val fullListState = viewModel.fullList.collectAsState()
 
-    var expanded by remember { mutableStateOf(false) }
+        var expanded by remember { mutableStateOf(false) }
 
-    var inputText by remember { mutableStateOf("") }
+        var inputText by remember { mutableStateOf("") }
 
-    val state = fullListState.value
+        val state = fullListState.value
 
-    var filteredOptions = if (inputText.length < 3 || state !is LoadingState.Success) {
-        listOf()
-    } else {
-        state.response.filter {
-            formatProjetoAtividade(it).contains(inputText, ignoreCase = true)
+        var filteredOptions = if (inputText.length < 3 || state !is LoadingState.Success) {
+            listOf()
+        } else {
+            state.response.filter {
+                formatProjetoAtividade(it).contains(inputText, ignoreCase = true)
+            }
         }
-    }
 
-    TextField(
-        modifier = Modifier.fillMaxWidth(),
-        value = inputText,
-        onValueChange = { newValue ->
-            inputText = newValue
-            expanded = true
-        },
-        placeholder = {
-            Text(text = "Buscar projeto / atividade")
-        },
-        colors = TextFieldDefaults.colors(
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
+        TextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = inputText,
+            onValueChange = { newValue ->
+                inputText = newValue
+                expanded = true
+            },
+            placeholder = {
+                Text(text = "Buscar projeto / atividade")
+            },
+            colors = TextFieldDefaults.colors(
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+            )
         )
-    )
 
-    if (filteredOptions.isNotEmpty() && expanded) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .verticalScroll(rememberScrollState())
-                .background(Color.Gray)
-        ) {
-            for (option in filteredOptions) {
-                DropdownMenuItem(
-                    modifier = Modifier
-                        .padding(0.dp, 0.dp, 0.dp, 1.dp)
-                        .background(Color.LightGray)
-                        .padding(4.dp),
-                    onClick = {
-                        filteredOptions = listOf()
-                        inputText = ""
-                        expanded = false
-                        viewModel.addToList(option)
-                    },
-                    text = {
-                        Text(text = formatProjetoAtividade(option))
-                    }
-                )
+        if (filteredOptions.isNotEmpty() && expanded) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
+                    .background(Color.Gray)
+            ) {
+                for (option in filteredOptions) {
+                    DropdownMenuItem(
+                        modifier = Modifier
+                            .padding(0.dp, 0.dp, 0.dp, 1.dp)
+                            .background(Color.LightGray)
+                            .padding(4.dp),
+                        onClick = {
+                            filteredOptions = listOf()
+                            inputText = ""
+                            expanded = false
+                            viewModel.addToList(option)
+                        },
+                        text = {
+                            Text(text = formatProjetoAtividade(option))
+                        }
+                    )
+                }
             }
         }
     }
