@@ -1,16 +1,14 @@
 package org.cidadeape.monitoraorcamento.presentation
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -24,9 +22,12 @@ import androidx.compose.ui.unit.sp
 import org.cidadeape.monitoraorcamento.common.LoadingState
 import org.cidadeape.monitoraorcamento.common.Util
 import org.cidadeape.monitoraorcamento.data.model.empenhos.Empenho
+import org.cidadeape.monitoraorcamento.data.model.projetosAtividades.ProjetoAtividade
 
 @Composable
-fun ProjetoAtividadeScreen(viewModel: ProjetoAtividadeViewModel) {
+fun ProjetoAtividadeScreen(viewModel: ProjetoAtividadeViewModel, projetoAtividade: ProjetoAtividade) {
+    viewModel.load(projetoAtividade)
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -39,13 +40,13 @@ fun ProjetoAtividadeScreen(viewModel: ProjetoAtividadeViewModel) {
             Text(
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                text = viewModel.projetoAtividadeState.nome
+                text = viewModel.projetoAtividadeState.nome.value ?: "-"
             )
 
             Text(
                 fontSize = 12.sp,
                 fontStyle = FontStyle.Italic,
-                text = "Código: ${viewModel.projetoAtividadeState.codigo}"
+                text = "Código: ${viewModel.projetoAtividadeState.codigo.value ?: "-"}"
             )
         }
 

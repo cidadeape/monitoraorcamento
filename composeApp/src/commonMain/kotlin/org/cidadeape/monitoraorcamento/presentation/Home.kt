@@ -17,18 +17,19 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
-import androidx.compose.material.lightColors
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.lightColorScheme
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -44,6 +45,7 @@ import org.cidadeape.monitoraorcamento.common.colorizedText
 import org.cidadeape.monitoraorcamento.data.model.projetosAtividades.ProjetoAtividade
 import org.jetbrains.compose.resources.imageResource
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(homeViewModel: HomeViewModel) {
     Column(
@@ -54,7 +56,7 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
             modifier = Modifier.fillMaxWidth().padding(16.dp),
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
-            color = lightColors().primary,
+            color = AppColors.Purple,
             text = "VALORES EMPENHADOS EM 2025"
         )
 
@@ -62,16 +64,26 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
             AutocompleteTextView(homeViewModel)
         }
 
-        val lista = homeViewModel.listaProjetosAtividades
+        val isRefreshing by remember { homeViewModel.refreshingState }
 
-        LazyColumn (
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+        PullToRefreshBox(
+            isRefreshing = isRefreshing,
+            onRefresh = {
+                homeViewModel.load()
+            }
         ) {
 
-            items(lista) { projetoAtividade ->
-                ProjetoAtividadeRow(homeViewModel, projetoAtividade)
-                Spacer(modifier = Modifier.fillMaxWidth().height(1.dp).background(AppColors.SuperLightGray))
+            val lista = remember { homeViewModel.listaProjetosAtividades }
+
+            LazyColumn (
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+
+                items(lista) { projetoAtividade ->
+                    ProjetoAtividadeRow(homeViewModel, projetoAtividade)
+                    Spacer(modifier = Modifier.fillMaxWidth().height(1.dp).background(AppColors.SuperLightGray))
+                }
             }
         }
     }
@@ -187,7 +199,7 @@ fun AutocompleteTextView(
         placeholder = {
             Text(text = "Buscar projeto / atividade")
         },
-        colors = TextFieldDefaults.textFieldColors(
+        colors = TextFieldDefaults.colors(
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
         )
@@ -211,10 +223,11 @@ fun AutocompleteTextView(
                         inputText = ""
                         expanded = false
                         viewModel.addToList(option)
+                    },
+                    text = {
+                        Text(text = formatProjetoAtividade(option))
                     }
-                ) {
-                    Text(text = formatProjetoAtividade(option))
-                }
+                )
             }
         }
     }

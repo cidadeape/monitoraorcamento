@@ -1,27 +1,42 @@
 package org.cidadeape.monitoraorcamento.presentation
 
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
+import org.cidadeape.monitoraorcamento.common.AppColors
 import org.cidadeape.monitoraorcamento.data.model.empenhos.Empenho
 import org.cidadeape.monitoraorcamento.data.model.projetosAtividades.ProjetoAtividade
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 var screen: MutableState<Screen> = mutableStateOf(Screen.Home())
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppTopBar(
     currentScreen: Screen
 ) {
     TopAppBar(
         title = { Text(currentScreen.title) },
+        colors = TopAppBarColors(
+            containerColor = AppColors.Purple,
+            scrolledContainerColor = AppColors.Purple,
+            navigationIconContentColor = Color.White,
+            titleContentColor = Color.White,
+            actionIconContentColor = Color.White
+        ),
         navigationIcon = {
             if (currentScreen.canNavigateBack) {
                 IconButton(onClick = currentScreen.navigateUp) {
@@ -48,16 +63,23 @@ fun App() {
             },
         ) { innerPadding ->
 
-            when (val screen = screenState) {
-                is Screen.Home -> HomeScreen(HomeViewModel())
-                is Screen.ProjetoAtividade -> ProjetoAtividadeScreen(
-                    viewModel<ProjetoAtividadeViewModel>(
-                        factory = ProjetoAtividadeViewModel.Factory(screen.projetoAtividade)
-                    )
-                )
-                is Screen.Empenho -> TODO()
-            }
+            Box(modifier = Modifier.padding(innerPadding)) {
 
+                when (val screen = screenState) {
+                    is Screen.Home -> HomeScreen(
+                        viewModel<HomeViewModel> (
+                            factory = HomeViewModel.Factory()
+                        )
+                    )
+                    is Screen.ProjetoAtividade -> ProjetoAtividadeScreen(
+                        viewModel<ProjetoAtividadeViewModel>(
+                            factory = ProjetoAtividadeViewModel.Factory()
+                        ),
+                        screen.projetoAtividade
+                    )
+                    is Screen.Empenho -> TODO()
+                }
+            }
         }
     }
 }

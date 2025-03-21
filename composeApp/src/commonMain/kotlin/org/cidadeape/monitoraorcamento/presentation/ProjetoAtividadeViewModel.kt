@@ -1,5 +1,7 @@
 package org.cidadeape.monitoraorcamento.presentation
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -15,20 +17,15 @@ import org.cidadeape.monitoraorcamento.data.model.projetosAtividades.ProjetoAtiv
 import kotlin.reflect.KClass
 
 class ProjetoAtividadeViewModel(
-    private val projetoAtividade: ProjetoAtividade,
     private val sofApi: ApiSof = ApiSof()
 ): ViewModel() {
 
-    val projetoAtividadeState = ProjetoAtividadeState(
-        projetoAtividade.codProjetoAtividade,
-        projetoAtividade.txtDescricaoProjetoAtividade
-    )
+    var projetoAtividadeState = ProjetoAtividadeState()
 
-    fun initialize(projetoAtividade: ProjetoAtividade) {
+    fun load(projetoAtividade: ProjetoAtividade) {
+        projetoAtividadeState.codigo.value = projetoAtividade.codProjetoAtividade
+        projetoAtividadeState.nome.value = projetoAtividade.txtDescricaoProjetoAtividade
 
-    }
-
-    init {
         loadEmpenhos(projetoAtividade.codProjetoAtividade)
     }
 
@@ -51,17 +48,18 @@ class ProjetoAtividadeViewModel(
     }
 
     data class ProjetoAtividadeState (
-        val codigo: String,
-        val nome: String,
+        val codigo: MutableState<String?> = mutableStateOf( null),
+        val nome: MutableState<String?> = mutableStateOf(null),
         var stateTotalEmpenhado: MutableStateFlow<LoadingState<String>> = MutableStateFlow(
             LoadingState.NotStarted()),
         var stateListaEmpenhos: MutableStateFlow<LoadingState<List<Empenho>>> = MutableStateFlow(
             LoadingState.NotStarted())
     )
 
-    class Factory(private val projetoAtividade: ProjetoAtividade): ViewModelProvider.Factory {
+    @Suppress("UNCHECKED_CAST")
+    class Factory: ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T {
-            return ProjetoAtividadeViewModel(projetoAtividade) as T
+            return ProjetoAtividadeViewModel() as T
         }
     }
 

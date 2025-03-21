@@ -1,16 +1,22 @@
 package org.cidadeape.monitoraorcamento.presentation
 
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.CreationExtras
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.cidadeape.monitoraorcamento.common.LoadingState
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.joinAll
 import org.cidadeape.monitoraorcamento.common.Util
 import org.cidadeape.monitoraorcamento.data.ApiSof
 import org.cidadeape.monitoraorcamento.data.IApiSof
 import org.cidadeape.monitoraorcamento.data.model.projetosAtividades.ProjetoAtividade
+import kotlin.reflect.KClass
 
 class HomeViewModel(
     private val sofApi: IApiSof = ApiSof()
@@ -28,9 +34,17 @@ class HomeViewModel(
 
     val fullList: MutableStateFlow<LoadingState<List<ProjetoAtividade>>> = MutableStateFlow(LoadingState.NotStarted())
 
+    val refreshingState = mutableStateOf(false)
+
     init {
-        loadAll()
-        loadList()
+        load()
+    }
+
+    fun load() = launchCoroutine {
+        refreshingState.value = true
+        loadSearchList()
+        loadChosenList()
+        refreshingState.value = false
     }
 
     fun removeFromList(projetoAtividadeState: ProjetoAtividadeState) {
@@ -48,7 +62,7 @@ class HomeViewModel(
         loadProjetoAtividade(projetoAtividadeState)
     }
 
-    private fun loadAll() = launchCoroutine {
+    private suspend fun loadSearchList() {
         fullList.value = LoadingState.Loading()
         fullList.value =
         try {
@@ -60,11 +74,13 @@ class HomeViewModel(
         }
     }
 
-    private fun loadList() {
+    private suspend fun loadChosenList() {
 
+        val jobs = arrayListOf<Job>()
         for (projAtividade in listaProjetosAtividades) {
-            loadProjetoAtividade(projAtividade)
+            jobs.add(loadProjetoAtividade(projAtividade))
         }
+        jobs.joinAll()
     }
 
     private fun loadProjetoAtividade(projetoAtividadeState: ProjetoAtividadeState) = launchCoroutine {
@@ -115,6 +131,13 @@ class HomeViewModel(
         viewModelScope.launch(Dispatchers.Default) {
             block.invoke()
         }
+
+    @Suppress("UNCHECKED_CAST")
+    class Factory : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T {
+            return HomeViewModel() as T
+        }
+    }
 
     companion object {
         private const val TAG = "HomeViewModel"
