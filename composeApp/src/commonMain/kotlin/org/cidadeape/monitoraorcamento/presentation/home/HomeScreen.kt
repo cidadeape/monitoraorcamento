@@ -1,4 +1,4 @@
-package org.cidadeape.monitoraorcamento.presentation
+package org.cidadeape.monitoraorcamento.presentation.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -22,7 +22,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -43,11 +42,15 @@ import org.cidadeape.monitoraorcamento.common.AppColors
 import org.cidadeape.monitoraorcamento.common.LoadingState
 import org.cidadeape.monitoraorcamento.common.colorizedText
 import org.cidadeape.monitoraorcamento.data.model.projetosAtividades.ProjetoAtividade
+import org.cidadeape.monitoraorcamento.presentation.AppViewModel
 import org.jetbrains.compose.resources.imageResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(homeViewModel: HomeViewModel) {
+fun HomeScreen(
+    appViewModel: AppViewModel,
+    homeViewModel: HomeViewModel
+) {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -81,7 +84,7 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
             ) {
 
                 items(lista) { projetoAtividade ->
-                    ProjetoAtividadeRow(homeViewModel, projetoAtividade)
+                    ProjetoAtividadeRow(appViewModel, homeViewModel, projetoAtividade)
                     Spacer(modifier = Modifier.fillMaxWidth().height(1.dp).background(AppColors.SuperLightGray))
                 }
             }
@@ -90,7 +93,11 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
 }
 
 @Composable
-fun ProjetoAtividadeRow(viewModel: HomeViewModel, projetoAtividadeState: HomeViewModel.ProjetoAtividadeState) {
+fun ProjetoAtividadeRow(
+    appViewModel: AppViewModel,
+    viewModel: HomeViewModel,
+    projetoAtividadeState: HomeViewModel.ProjetoAtividadeState
+) {
 
     val projetoState = projetoAtividadeState.stateProjeto.collectAsState()
     val totalEmpenhadoState = projetoAtividadeState.stateTotalEmpenhado.collectAsState()
@@ -100,7 +107,7 @@ fun ProjetoAtividadeRow(viewModel: HomeViewModel, projetoAtividadeState: HomeVie
             .clickable {
                 val state = projetoState.value as? LoadingState.Success<ProjetoAtividade>
                 state?.let {
-                    navigateToProjetoAtividade(state.response)
+                    appViewModel.navigateToProjetoAtividade(state.response)
                 }
             }.padding(16.dp)
     ) {

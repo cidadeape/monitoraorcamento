@@ -1,5 +1,6 @@
-package org.cidadeape.monitoraorcamento.presentation
+package org.cidadeape.monitoraorcamento.presentation.projeto_atividade
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,12 +21,18 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.cidadeape.monitoraorcamento.common.LoadingState
+import org.cidadeape.monitoraorcamento.common.TextTitle
 import org.cidadeape.monitoraorcamento.common.Util
 import org.cidadeape.monitoraorcamento.data.model.empenhos.Empenho
 import org.cidadeape.monitoraorcamento.data.model.projetosAtividades.ProjetoAtividade
+import org.cidadeape.monitoraorcamento.presentation.AppViewModel
 
 @Composable
-fun ProjetoAtividadeScreen(viewModel: ProjetoAtividadeViewModel, projetoAtividade: ProjetoAtividade) {
+fun ProjetoAtividadeScreen(
+    appViewModel: AppViewModel,
+    viewModel: ProjetoAtividadeViewModel,
+    projetoAtividade: ProjetoAtividade
+) {
     viewModel.load(projetoAtividade)
 
     Column(
@@ -37,11 +44,7 @@ fun ProjetoAtividadeScreen(viewModel: ProjetoAtividadeViewModel, projetoAtividad
             modifier = Modifier.fillMaxWidth().padding(24.dp)
         ) {
 
-            Text(
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                text = viewModel.projetoAtividadeState.nome.value ?: "-"
-            )
+            TextTitle(text = viewModel.projetoAtividadeState.nome.value ?: "-")
 
             Text(
                 fontSize = 12.sp,
@@ -51,20 +54,33 @@ fun ProjetoAtividadeScreen(viewModel: ProjetoAtividadeViewModel, projetoAtividad
         }
 
         Column (modifier = Modifier.padding(24.dp, 0.dp, 24.dp, 0.dp)) {
-            ListaEmpenhos(
-                viewModel.projetoAtividadeState
-            )
+            ListaEmpenhos(appViewModel, viewModel)
         }
     }
 }
 
 @Composable
 fun ListaEmpenhos(
-    stateProjetoAtividade: ProjetoAtividadeViewModel.ProjetoAtividadeState
+    appViewModel: AppViewModel,
+    viewModel: ProjetoAtividadeViewModel
 ) {
 
-    val listaEmpenhosState = stateProjetoAtividade.stateListaEmpenhos.collectAsState()
+    val stateProjetoAtividade = viewModel.projetoAtividadeState
     val totalEmpenhosState = stateProjetoAtividade.stateTotalEmpenhado.collectAsState()
+    val listaEmpenhosState = stateProjetoAtividade.stateListaEmpenhos.collectAsState()
+
+    when (val state = totalEmpenhosState.value) {
+        is LoadingState.Failure -> Text(state.message)
+        is LoadingState.Success -> {
+            Text(
+                modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 16.dp),
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold,
+                text = "Total empenhado em 2025: ${state.response}"
+            )
+        }
+        else -> {}
+    }
 
     when (val state = listaEmpenhosState.value) {
         is LoadingState.Failure -> Text(state.message)
@@ -79,7 +95,7 @@ fun ListaEmpenhos(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     for (empenho in state.response) {
-                        EmpenhoRow(empenho)
+                        EmpenhoRow(appViewModel, viewModel.projetoAtividade, empenho)
                     }
                 }
             }
@@ -88,30 +104,34 @@ fun ListaEmpenhos(
         is LoadingState.NotStarted -> {}
     }
 
-    when (val state = totalEmpenhosState.value) {
-        is LoadingState.Failure -> Text(state.message)
-        is LoadingState.Success -> {
-            Text(
-                modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 16.dp),
-                textAlign = TextAlign.Center,
-                text = "Total empenhado (2025): ${state.response}"
-            )
-        }
-        else -> {}
-    }
 }
 
 @Composable
-fun EmpenhoRow(empenho: Empenho) {
-    Row (
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
+fun EmpenhoRow(
+    appViewModel: AppViewModel,
+    projetoAtividade: ProjetoAtividade,
+    empenho: Empenho
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                appViewModel.navigateToEmpenho(projetoAtividade, empenho)
+            }
     ) {
-        CellRow(empenho.datEmpenho?.substring(0, 10), fontWeight = FontWeight.Bold)
-        CellRow(Util.formatToCurrency(empenho.valTotalEmpenhado), fontWeight = FontWeight.Bold)
-    }
-    Row (modifier = Modifier.fillMaxWidth().padding(0.dp, 0.dp, 0.dp, 6.dp)) {
-        CellRow(empenho.txDescricaoElemento, fontSize = 12.sp)
+        Row (
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            CellRow(empenho.datEmpenho?.substring(0, 10), fontWeight = FontWeight.Bold)
+            CellRow(Util.formatToCurrency(empenho.valTotalEmpenhado), fontWeight = FontWeight.Bold)
+        }
+        Row (modifier = Modifier.fillMaxWidth().padding(0.dp, 0.dp, 0.dp, 6.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            CellRow("Item / Despesa: ${empenho.codItemDespesa} - ${empenho.txDescricaoItemDespesa}", fontSize = 12.sp)
+            CellRow("Fonte de recurso: ${empenho.codFonteRecurso} - ${empenho.txDescricaoFonteRecurso}", fontSize = 12.sp)
+        }
     }
 }
 

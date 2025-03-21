@@ -1,4 +1,4 @@
-package org.cidadeape.monitoraorcamento.presentation
+package org.cidadeape.monitoraorcamento.presentation.projeto_atividade
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -20,9 +20,11 @@ class ProjetoAtividadeViewModel(
     private val sofApi: ApiSof = ApiSof()
 ): ViewModel() {
 
+    lateinit var projetoAtividade: ProjetoAtividade
     var projetoAtividadeState = ProjetoAtividadeState()
 
     fun load(projetoAtividade: ProjetoAtividade) {
+        this.projetoAtividade = projetoAtividade
         projetoAtividadeState.codigo.value = projetoAtividade.codProjetoAtividade
         projetoAtividadeState.nome.value = projetoAtividade.txtDescricaoProjetoAtividade
 

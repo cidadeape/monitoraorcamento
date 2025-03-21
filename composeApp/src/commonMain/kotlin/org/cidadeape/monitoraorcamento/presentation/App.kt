@@ -17,11 +17,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.cidadeape.monitoraorcamento.common.AppColors
-import org.cidadeape.monitoraorcamento.data.model.empenhos.Empenho
-import org.cidadeape.monitoraorcamento.data.model.projetosAtividades.ProjetoAtividade
+import org.cidadeape.monitoraorcamento.presentation.empenho.EmpenhoScreen
+import org.cidadeape.monitoraorcamento.presentation.home.HomeScreen
+import org.cidadeape.monitoraorcamento.presentation.home.HomeViewModel
+import org.cidadeape.monitoraorcamento.presentation.projeto_atividade.ProjetoAtividadeScreen
+import org.cidadeape.monitoraorcamento.presentation.projeto_atividade.ProjetoAtividadeViewModel
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-var screen: MutableState<Screen> = mutableStateOf(Screen.Home())
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,9 +54,9 @@ fun AppTopBar(
 
 @Composable
 @Preview
-fun App() {
+fun App(viewModel: AppViewModel = viewModel<AppViewModel>(factory = AppViewModel.Factory())) {
 
-    val screenState by remember { screen }
+    val screenState by remember { viewModel.screenState }
 
     MaterialTheme {
         Scaffold(
@@ -67,39 +69,21 @@ fun App() {
 
                 when (val screen = screenState) {
                     is Screen.Home -> HomeScreen(
+                        viewModel,
                         viewModel<HomeViewModel> (
                             factory = HomeViewModel.Factory()
                         )
                     )
                     is Screen.ProjetoAtividade -> ProjetoAtividadeScreen(
+                        viewModel,
                         viewModel<ProjetoAtividadeViewModel>(
                             factory = ProjetoAtividadeViewModel.Factory()
                         ),
                         screen.projetoAtividade
                     )
-                    is Screen.Empenho -> TODO()
+                    is Screen.Empenho -> EmpenhoScreen(screen.empenho)
                 }
             }
         }
     }
-}
-
-fun navigateToHome() {
-    screen.value = Screen.Home()
-}
-
-fun navigateToProjetoAtividade(projetoAtividade: ProjetoAtividade) {
-    screen.value = Screen.ProjetoAtividade(
-        projetoAtividade,
-        true,
-        ::navigateToHome
-    )
-}
-
-fun navigateToEmpenho(projetoAtividade: ProjetoAtividade, empenho: Empenho) {
-    screen.value = Screen.Empenho(
-        empenho,
-        true,
-        { navigateToProjetoAtividade(projetoAtividade) }
-    )
 }
