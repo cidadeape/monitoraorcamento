@@ -42,16 +42,6 @@ fun EmpenhoScreen(
             .padding(32.dp)
     ) {
 
-        TextTitle("Empenho ${empenho.codEmpenho} / ${empenho.anoEmpenho}")
-        Text("Data: ${empenho.datEmpenho}")
-        Text(
-            fontWeight = FontWeight.Bold,
-            text = "Valor empenhado líquido: ${Util.formatToCurrency(empenho.valEmpenhadoLiquido)}"
-        )
-        TextTitleValue("Fonte do recurso", "${empenho.codFonteRecurso} - ${empenho.txDescricaoFonteRecurso}")
-
-        Spacer(modifier = Modifier.height(16.dp))
-
         Text(
             fontStyle = FontStyle.Italic,
             fontSize = 12.sp,
@@ -63,6 +53,16 @@ fun EmpenhoScreen(
             text = "Cód: ${empenho.codProjetoAtividade}"
         )
 
+        Spacer(modifier = Modifier.height(16.dp))
+
+        TextTitle("Empenho ${empenho.codEmpenho} / ${empenho.anoEmpenho}")
+        Text("Data: ${empenho.datEmpenho}")
+        Text(
+            fontWeight = FontWeight.Bold,
+            text = "Valor empenhado líquido: ${Util.formatToCurrency(empenho.valEmpenhadoLiquido)}"
+        )
+        TextTitleValue("Fonte do recurso", "${empenho.codFonteRecurso} - ${empenho.txDescricaoFonteRecurso}")
+        
         BoxedColumn {
             TextTitleValue("Total empenhado", Util.formatToCurrency(empenho.valTotalEmpenhado))
             TextTitleValue("Anulado", Util.formatToCurrency(empenho.valAnuladoEmpenho))
