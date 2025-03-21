@@ -115,6 +115,7 @@ fun EmpenhoRow(
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(0.dp, 0.dp, 0.dp, 4.dp)
             .clickable {
                 appViewModel.navigateToEmpenho(projetoAtividade, empenho)
             }
@@ -123,15 +124,29 @@ fun EmpenhoRow(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            CellRow(empenho.datEmpenho?.substring(0, 10), fontWeight = FontWeight.Bold)
-            CellRow(Util.formatToCurrency(empenho.valTotalEmpenhado), fontWeight = FontWeight.Bold)
+            Text(
+                text = empenho.datEmpenho?.substring(0, 10) ?: "",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            Text(
+                text = Util.formatToCurrency(empenho.valTotalEmpenhado),
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold
+            )
         }
-        Row (modifier = Modifier.fillMaxWidth().padding(0.dp, 0.dp, 0.dp, 6.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            CellRow("Item / Despesa: ${empenho.codItemDespesa} - ${empenho.txDescricaoItemDespesa}", fontSize = 12.sp)
-            CellRow("Fonte de recurso: ${empenho.codFonteRecurso} - ${empenho.txDescricaoFonteRecurso}", fontSize = 12.sp)
-        }
+
+        Text(
+            text = "Item / Despesa: ${empenho.codItemDespesa} - ${empenho.txDescricaoItemDespesa}",
+            fontSize = 12.sp
+        )
+
+        Text(
+            text = "Fonte do recurso: ${empenho.codFonteRecurso} - ${empenho.txDescricaoFonteRecurso}",
+            fontSize = 12.sp
+        )
+
     }
 }
 
