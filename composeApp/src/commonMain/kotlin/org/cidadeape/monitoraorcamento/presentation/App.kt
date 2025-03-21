@@ -15,6 +15,7 @@ import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.cidadeape.monitoraorcamento.common.AppColors
 import org.cidadeape.monitoraorcamento.presentation.empenho.EmpenhoScreen
@@ -31,7 +32,12 @@ fun AppTopBar(
     currentScreen: Screen
 ) {
     TopAppBar(
-        title = { Text(currentScreen.title) },
+        title = {
+            Text(
+                maxLines = 1,
+                overflow = TextOverflow.Clip,
+                text = currentScreen.title
+            ) },
         colors = TopAppBarColors(
             containerColor = AppColors.Purple,
             scrolledContainerColor = AppColors.Purple,

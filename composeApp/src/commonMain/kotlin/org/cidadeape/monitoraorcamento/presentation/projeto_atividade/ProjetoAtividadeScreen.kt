@@ -1,11 +1,14 @@
 package org.cidadeape.monitoraorcamento.presentation.projeto_atividade
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -20,6 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.cidadeape.monitoraorcamento.common.AppColors
 import org.cidadeape.monitoraorcamento.common.LoadingState
 import org.cidadeape.monitoraorcamento.common.TextTitle
 import org.cidadeape.monitoraorcamento.common.Util
@@ -96,6 +100,7 @@ fun ListaEmpenhos(
                 ) {
                     for (empenho in state.response) {
                         EmpenhoRow(appViewModel, viewModel.projetoAtividade, empenho)
+                        Spacer(modifier = Modifier.fillMaxWidth().padding(0.dp, 8.dp, 0.dp, 8.dp).height(1.dp).background(AppColors.SuperLightGray))
                     }
                 }
             }
@@ -115,7 +120,6 @@ fun EmpenhoRow(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(0.dp, 0.dp, 0.dp, 4.dp)
             .clickable {
                 appViewModel.navigateToEmpenho(projetoAtividade, empenho)
             }
