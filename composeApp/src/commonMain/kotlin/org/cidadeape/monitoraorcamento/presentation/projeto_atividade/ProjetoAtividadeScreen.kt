@@ -129,7 +129,7 @@ fun EmpenhoRow(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
-                text = empenho.datEmpenho?.substring(0, 10) ?: "",
+                text = "Nº ${empenho.codEmpenho} - ${empenho.datEmpenho?.substring(0, 10) ?: ""}",
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold
             )
