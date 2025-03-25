@@ -15,6 +15,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontStyle
@@ -22,6 +26,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.cidadeape.monitoraorcamento.common.AppColors
+import org.cidadeape.monitoraorcamento.common.CopyToClipboard
+import org.cidadeape.monitoraorcamento.common.OpenInNewWindow
 import org.cidadeape.monitoraorcamento.common.TextTitle
 import org.cidadeape.monitoraorcamento.common.TextTitleValue
 import org.cidadeape.monitoraorcamento.common.Util
@@ -73,18 +79,22 @@ fun EmpenhoScreen(
         }
 
         BoxedColumn {
-            /*Row(
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                TextTitleValue("Processo", empenho.codProcesso)
-                Text(
-                    modifier = Modifier.clickable {
-                        val openUrl = Intent(Intent.ACTION)
-                    },
-                    text = "Buscar processo SEI"
-                )
-            }*/
             TextTitleValue("Processo", empenho.codProcesso)
+
+            var openSei by remember { mutableStateOf(false) }
+            Text(
+                color = AppColors.Purple,
+                modifier = Modifier.clickable {
+                    openSei = true
+                },
+                text = "Buscar processo no SEI"
+            )
+            if (openSei) {
+                CopyToClipboard(empenho.codProcesso, "Código do processo copiado. Uma nova janela abrirá para o SEI.")
+                OpenInNewWindow("https://processos.prefeitura.sp.gov.br/Forms/consultarProcessos.aspx")
+                openSei = false
+            }
+
             TextTitleValue("Contrato nº", "${empenho.numContrato} / ${empenho.anoContrato}")
             TextTitleValue("CPF/CNPJ", empenho.numCpfCnpj)
             TextTitleValue("Razão Social", empenho.txtRazaoSocial)
@@ -108,10 +118,10 @@ fun EmpenhoScreen(
 
             for (anexo in anexos) {
                 BoxedColumn {
-                    Text("Unidade de medida: ${anexo.siglaUnidadeMedida}")
-                    Text("Descrição: ${anexo.descricaoAnexo}")
-                    Text("Quantidade anexo: ${anexo.qtdeAnexo}")
-                    Text("Valor unitário anexo: ${Util.formatToCurrency(anexo.valorUnitarioAnexo)}")
+                    TextTitleValue("Unidade de medida", anexo.siglaUnidadeMedida)
+                    TextTitleValue("Descrição", anexo.descricaoAnexo)
+                    TextTitleValue("Quantidade anexo", anexo.qtdeAnexo.toString())
+                    TextTitleValue("Valor unitário anexo", Util.formatToCurrency(anexo.valorUnitarioAnexo))
                 }
             }
         }

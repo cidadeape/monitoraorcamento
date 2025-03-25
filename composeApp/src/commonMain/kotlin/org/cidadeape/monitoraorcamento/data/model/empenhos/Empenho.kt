@@ -10,7 +10,7 @@ data class Empenho(
     val anoEmpenho: Int?,
     val mesEmpenho: String?,
     val datEmpenho: String?,
-    val codProcesso: String?,
+    val codProcesso: String,
     val numCpfCnpj: String?,
     val txtRazaoSocial: String?,
     val numContrato: String?,

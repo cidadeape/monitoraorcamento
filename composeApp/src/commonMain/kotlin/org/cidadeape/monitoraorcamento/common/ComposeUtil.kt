@@ -3,6 +3,10 @@ package org.cidadeape.monitoraorcamento.common
 import androidx.compose.foundation.clickable
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
@@ -34,19 +38,32 @@ fun TextTitle(text: String) {
 
 @Composable
 fun TextTitleValue(title: String, value: String?) {
-    val clipboardManager = LocalClipboardManager.current
 
+    var copyToClipboard by remember { mutableStateOf(false) }
     val text = "$title: $value"
     Text(
         modifier = Modifier.clickable {
-            clipboardManager.setText(AnnotatedString(value ?: ""))
-            showMessage("Valor copiado para área de transferência")
+            copyToClipboard = true
         },
         text = text
     )
+    if (copyToClipboard) {
+        CopyToClipboard(text)
+        copyToClipboard = false
+    }
 }
 
-expect fun showMessage(message: String)
+@Composable
+fun CopyToClipboard(textToCopy: String, message: String = "Valor copiado para área de transferência") {
+    LocalClipboardManager.current.setText(AnnotatedString(textToCopy))
+    ShowMessage(message)
+}
+
+@Composable
+expect fun ShowMessage(message: String)
+
+@Composable
+expect fun OpenInNewWindow(url: String)
 
 object AppColors {
 
