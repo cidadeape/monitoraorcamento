@@ -2,10 +2,8 @@ package org.cidadeape.monitoraorcamento.presentation.empenho
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,7 +18,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -68,7 +65,9 @@ fun EmpenhoScreen(
             text = "Valor empenhado líquido: ${Util.formatToCurrency(empenho.valEmpenhadoLiquido)}"
         )
         TextTitleValue("Fonte do recurso", "${empenho.codFonteRecurso} - ${empenho.txDescricaoFonteRecurso}")
-        
+        TextTitleValue("Categoria", "${empenho.codCategoria} - ${empenho.txDescricaoCategoriaEconomica}")
+        TextTitleValue("Grupo Despesa", "${empenho.codGrupo} - ${empenho.txDescricaoGrupoDespesa}")
+
         BoxedColumn {
             TextTitleValue("Total empenhado", Util.formatToCurrency(empenho.valTotalEmpenhado))
             TextTitleValue("Anulado", Util.formatToCurrency(empenho.valAnuladoEmpenho))

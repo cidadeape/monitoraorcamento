@@ -7,5 +7,5 @@ data class Anexo(
     val siglaUnidadeMedida: String,
     val descricaoAnexo: String,
     val qtdeAnexo: Int,
-    val valorUnitarioAnexo: Float
+    val valorUnitarioAnexo: Double
 )

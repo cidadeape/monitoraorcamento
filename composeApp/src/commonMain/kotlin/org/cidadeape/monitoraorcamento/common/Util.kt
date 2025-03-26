@@ -1,21 +1,11 @@
 package org.cidadeape.monitoraorcamento.common
 
-import kotlin.math.roundToInt
+import kotlin.math.roundToLong
 
 object Util {
 
     fun formatToCurrency(double: Double): String {
-        val value = double.roundToInt().toString()
-
-        return "R$ " + value
-            .reversed()
-            .chunked(3)
-            .joinToString(".")
-            .reversed()
-    }
-
-    fun formatToCurrency(float: Float): String {
-        val value = float.roundToInt().toString()
+        val value = double.roundToLong().toString()
 
         return "R$ " + value
             .reversed()

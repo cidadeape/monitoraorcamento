@@ -88,8 +88,9 @@ class ApiSof: IApiSof {
                 parameters.append("codProjetoAtividade", codProjetoAtividade)
             }
         }
+        val empenhoResponse = response.body<EmpenhoResponse>()
 
-        return response.body()
+        return empenhoResponse
     }
 
     override suspend fun getProjetoAtividade(ano: String, codProjetoAtividade: String?): ProjetosAtividadesResponse {

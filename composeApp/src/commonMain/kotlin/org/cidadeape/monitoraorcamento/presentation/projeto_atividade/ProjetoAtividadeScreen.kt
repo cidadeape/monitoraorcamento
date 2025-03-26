@@ -57,7 +57,7 @@ fun ProjetoAtividadeScreen(
             )
         }
 
-        Column (modifier = Modifier.padding(24.dp, 0.dp, 24.dp, 0.dp)) {
+        Column (modifier = Modifier.padding(24.dp, 0.dp, 8.dp, 0.dp)) {
             ListaEmpenhos(appViewModel, viewModel)
         }
     }
@@ -73,14 +73,21 @@ fun ListaEmpenhos(
     val totalEmpenhosState = stateProjetoAtividade.stateTotalEmpenhado.collectAsState()
     val listaEmpenhosState = stateProjetoAtividade.stateListaEmpenhos.collectAsState()
 
+    Text(
+        modifier = Modifier.fillMaxWidth().padding(0.dp, 0.dp, 0.dp, 4.dp),
+        textAlign = TextAlign.Start,
+        text = "Total empenhado líquido em 2025:"
+    )
+
     when (val state = totalEmpenhosState.value) {
         is LoadingState.Failure -> Text(state.message)
         is LoadingState.Success -> {
             Text(
-                modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 16.dp),
-                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth().padding(0.dp, 0.dp, 0.dp, 32.dp),
+                textAlign = TextAlign.Start,
+                fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
-                text = "Total empenhado em 2025: ${state.response}"
+                text = state.response
             )
         }
         else -> {}
@@ -135,7 +142,7 @@ fun EmpenhoRow(
             )
 
             Text(
-                text = Util.formatToCurrency(empenho.valTotalEmpenhado),
+                text = Util.formatToCurrency(empenho.valEmpenhadoLiquido),
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -148,6 +155,11 @@ fun EmpenhoRow(
 
         Text(
             text = "Fonte do recurso: ${empenho.codFonteRecurso} - ${empenho.txDescricaoFonteRecurso}",
+            fontSize = 12.sp
+        )
+
+        Text(
+            text = "Grupo de despesa: ${empenho.codGrupo} - ${empenho.txDescricaoGrupoDespesa}",
             fontSize = 12.sp
         )
 

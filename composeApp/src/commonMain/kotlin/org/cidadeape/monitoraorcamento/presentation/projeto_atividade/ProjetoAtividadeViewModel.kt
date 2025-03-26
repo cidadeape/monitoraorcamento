@@ -39,7 +39,7 @@ class ProjetoAtividadeViewModel(
             try {
                 val listaEmpenhos = sofApi.getEmpenhos("2025", "12", codProjetoAtividade).lstEmpenhos
                 projetoAtividadeState.stateListaEmpenhos.value = LoadingState.Success(listaEmpenhos)
-                val totalEmpenhado = listaEmpenhos.sumOf { it.valEmpenhadoLiquido.toDouble() }
+                val totalEmpenhado = listaEmpenhos.sumOf { it.valEmpenhadoLiquido }
                 projetoAtividadeState.stateTotalEmpenhado.value = LoadingState.Success(Util.formatToCurrency(totalEmpenhado))
             } catch (e: Exception) {
                 e.printStackTrace()
