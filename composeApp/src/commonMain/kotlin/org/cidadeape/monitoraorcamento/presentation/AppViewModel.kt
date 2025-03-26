@@ -10,6 +10,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import org.cidadeape.monitoraorcamento.common.CategoriaDespesa
 import org.cidadeape.monitoraorcamento.common.LoadingState
 import org.cidadeape.monitoraorcamento.common.Util
 import org.cidadeape.monitoraorcamento.data.ApiSof
@@ -18,6 +19,7 @@ import org.cidadeape.monitoraorcamento.data.model.empenhos.Empenho
 import org.cidadeape.monitoraorcamento.data.model.projetosAtividades.ProjetoAtividade
 import org.cidadeape.monitoraorcamento.presentation.grupo.GrupoState
 import org.cidadeape.monitoraorcamento.presentation.grupo.ProjetoAtividadeState
+import org.cidadeape.monitoraorcamento.presentation.grupo.TotalEmpenhos
 import kotlin.reflect.KClass
 
 class AppViewModel(
@@ -25,7 +27,6 @@ class AppViewModel(
 ): ViewModel() {
 
     var screenState: MutableState<Screen> = mutableStateOf(Screen.Home())
-
 
     private val grupoAsfalto = GrupoState(
         nome = "Asfalto",
@@ -44,10 +45,12 @@ class AppViewModel(
         nome = "Ciclovias e Ciclofaixas",
         listaProjetosAtividades = listOf(
             ProjetoAtividadeState("1097"),
-            ProjetoAtividadeState("1098")
+            ProjetoAtividadeState("1098"),
+            ProjetoAtividadeState("2093"),
+            ProjetoAtividadeState("2098")
         ))
 
-    private val grupoSegurançaViaria = GrupoState(
+    private val grupoSegurancaViaria = GrupoState(
         nome = "Segurança Viária",
         listaProjetosAtividades = listOf(
             ProjetoAtividadeState("3757")
@@ -58,8 +61,10 @@ class AppViewModel(
         listaProjetosAtividades = listOf(
             ProjetoAtividadeState("1099"),
             ProjetoAtividadeState("1100"),
+            ProjetoAtividadeState("2099"),
             ProjetoAtividadeState("5391"),
-            ProjetoAtividadeState("5392")
+            ProjetoAtividadeState("5392"),
+            ProjetoAtividadeState("5393"),
         ))
 
     private val grupoOnibusTerminais = GrupoState(
@@ -67,12 +72,15 @@ class AppViewModel(
         listaProjetosAtividades = listOf(
             ProjetoAtividadeState("1095"),
             ProjetoAtividadeState("1096"),
-            ProjetoAtividadeState("3749")
+            ProjetoAtividadeState("2096"),
+            ProjetoAtividadeState("3749"),
+            ProjetoAtividadeState("4663"),
         ))
 
     private val grupoOnibusFrota = GrupoState(
         nome = "Ônibus - Frota",
         listaProjetosAtividades = listOf(
+            ProjetoAtividadeState("1800"),
             ProjetoAtividadeState("3800"),
             ProjetoAtividadeState("3801")
         ))
@@ -87,7 +95,7 @@ class AppViewModel(
         grupoAsfalto,
         grupoCalcadas,
         grupoBicicleta,
-        grupoSegurançaViaria,
+        grupoSegurancaViaria,
         grupoOnibusCorredores,
         grupoOnibusTerminais,
         grupoOnibusFrota,
@@ -125,12 +133,15 @@ class AppViewModel(
             loadProjetoAtividadeComTotalEmpenhado(projeto)
         }
 
-        var totalEmpenhadoGrupo = 0.0
+        val totalEmpenho = TotalEmpenhos(0.0, 0.0, 0.0, 0.0)
         val failedList = grupoState.listaProjetosAtividades.filter {
 
             when (val state = it.stateTotalEmpenhado.value) {
                 is LoadingState.Success -> {
-                    totalEmpenhadoGrupo += state.response
+                    totalEmpenho.total += state.response.total
+                    totalEmpenho.despCorrentes += state.response.despCorrentes
+                    totalEmpenho.despCapital += state.response.despCapital
+                    totalEmpenho.resContingencia += state.response.resContingencia
                     false
                 }
                 else -> {
@@ -139,12 +150,11 @@ class AppViewModel(
             }
         }
 
-        grupoState.stateTotalEmpenhadoGrupo.value =
-            if (failedList.isNotEmpty()) {
-                LoadingState.Failure("Erro ao carregar total empenhado")
-            } else {
-                LoadingState.Success(Util.formatToCurrency(totalEmpenhadoGrupo))
-            }
+        if (failedList.isNotEmpty()) {
+            grupoState.stateTotalEmpenhadoGrupo.value = LoadingState.Failure("Erro ao carregar totais")
+        } else {
+            grupoState.stateTotalEmpenhadoGrupo.value = LoadingState.Success(totalEmpenho)
+        }
 
         grupoState.refreshing.value = false
     }
@@ -211,10 +221,29 @@ class AppViewModel(
                 .getEmpenhos("2025", "12", projetoAtividadeState.codigo)
                 .lstEmpenhos
 
-            val totalEmpenhado = listaEmpenhos.sumOf {
-                it.valEmpenhadoLiquido
-            }
-            LoadingState.Success(totalEmpenhado)
+            val totalEmpenhado = listaEmpenhos
+                .sumOf { it.valEmpenhadoLiquido }
+
+            val despCorrentes = listaEmpenhos
+                .filter { it.codCategoria == CategoriaDespesa.DESP_CORRENTES }
+                .sumOf { it.valEmpenhadoLiquido }
+
+            val despCapital = listaEmpenhos
+                .filter { it.codCategoria == CategoriaDespesa.DESP_CAPITAL }
+                .sumOf { it.valEmpenhadoLiquido }
+
+            val resContingencia = listaEmpenhos
+                .filter { it.codCategoria == CategoriaDespesa.RES_CONTINGENCIA }
+                .sumOf { it.valEmpenhadoLiquido }
+
+            val empenhos = TotalEmpenhos(
+                totalEmpenhado,
+                despCorrentes,
+                despCapital,
+                resContingencia
+            )
+
+            LoadingState.Success(empenhos)
         } catch (e: Exception) {
             e.printStackTrace()
             LoadingState.Failure("Erro ao carregar empenhos: ${e::class.simpleName}")

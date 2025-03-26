@@ -29,6 +29,8 @@ import monitoraorcamento.composeapp.generated.resources.Res
 import monitoraorcamento.composeapp.generated.resources.refresh_24dp
 import org.cidadeape.monitoraorcamento.common.AppColors
 import org.cidadeape.monitoraorcamento.common.LoadingState
+import org.cidadeape.monitoraorcamento.common.TextTitle
+import org.cidadeape.monitoraorcamento.common.Util
 import org.cidadeape.monitoraorcamento.common.colorizedText
 import org.cidadeape.monitoraorcamento.presentation.AppViewModel
 import org.cidadeape.monitoraorcamento.presentation.grupo.GrupoState
@@ -86,24 +88,45 @@ fun GrupoRow(
 
             Text(grupoState.nome)
 
-            Text(
-                modifier = Modifier.fillMaxWidth().padding(0.dp, 8.dp, 0.dp, 0.dp),
-                textAlign = TextAlign.Start,
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp,
-                text = when (val state = totalEmpenhadoState.value) {
-                    is LoadingState.Loading -> {
-                        colorizedText(text = "Carregando...", color = Color.Black)
-                    }
-                    is LoadingState.Success -> {
-                        colorizedText(text = state.response, color = Color.Black)
-                    }
-                    is LoadingState.Failure -> {
-                        colorizedText(text = state.message, color = Color.Red)
-                    }
-                    else -> colorizedText(text = "-", color = Color.Black)
+            when (val state = totalEmpenhadoState.value) {
+                is LoadingState.Loading -> {
+                    Text(colorizedText(text = "Carregando...", color = Color.Black))
                 }
-            )
+
+                is LoadingState.Success -> {
+                    Text(
+                        modifier = Modifier.fillMaxWidth().padding(0.dp, 8.dp, 0.dp, 0.dp),
+                        textAlign = TextAlign.Start,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp,
+                        text = colorizedText(
+                            text = Util.formatToCurrency(state.response.total),
+                            color = Color.Black
+                        )
+                    )
+
+                    Text(
+                        fontSize = 12.sp,
+                        text = "Despesas correntes: ${Util.formatToCurrency(state.response.despCorrentes)}"
+                    )
+
+                    Text(
+                        fontSize = 12.sp,
+                        text = "Despesas de capital: ${Util.formatToCurrency(state.response.despCapital)}"
+                    )
+
+                    Text(
+                        fontSize = 12.sp,
+                        text = "Reserva de contingência: ${Util.formatToCurrency(state.response.resContingencia)}"
+                    )
+                }
+
+                is LoadingState.Failure -> {
+                    Text(colorizedText(text = state.message, color = Color.Red))
+                }
+
+                else -> Text(colorizedText(text = "-", color = Color.Black))
+            }
         }
 
         Column(modifier = Modifier

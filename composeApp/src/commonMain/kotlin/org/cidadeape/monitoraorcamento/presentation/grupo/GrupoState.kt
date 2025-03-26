@@ -10,11 +10,18 @@ data class GrupoState (
     val nome: String,
     val listaProjetosAtividades: List<ProjetoAtividadeState>,
     val refreshing: MutableState<Boolean> = mutableStateOf(false),
-    val stateTotalEmpenhadoGrupo: MutableStateFlow<LoadingState<String>> = MutableStateFlow(LoadingState.NotStarted())
+    val stateTotalEmpenhadoGrupo: MutableStateFlow<LoadingState<TotalEmpenhos>> = MutableStateFlow(LoadingState.NotStarted())
 )
 
 data class ProjetoAtividadeState (
     val codigo: String,
     var stateProjeto: MutableStateFlow<LoadingState<ProjetoAtividade>> = MutableStateFlow(LoadingState.NotStarted()),
-    var stateTotalEmpenhado: MutableStateFlow<LoadingState<Double>> = MutableStateFlow(LoadingState.NotStarted())
+    var stateTotalEmpenhado: MutableStateFlow<LoadingState<TotalEmpenhos>> = MutableStateFlow(LoadingState.NotStarted())
+)
+
+data class TotalEmpenhos(
+    var total: Double,
+    var despCorrentes: Double,
+    var despCapital: Double,
+    var resContingencia: Double,
 )

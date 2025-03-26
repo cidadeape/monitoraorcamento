@@ -125,7 +125,7 @@ fun ProjetoAtividadeRow(
                             colorizedText(text = "Carregando...", color = Color.Black)
                         }
                         is LoadingState.Success -> {
-                            colorizedText(text = Util.formatToCurrency(state.response), color = Color.Black)
+                            colorizedText(text = Util.formatToCurrency(state.response.total), color = Color.Black)
                         }
                         is LoadingState.Failure -> {
                             colorizedText(text = state.message, color = Color.Red)

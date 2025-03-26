@@ -56,7 +56,7 @@ fun GrupoScreen(
             val text: String = when (val state = stateTotalEmpenhado.value) {
                 is LoadingState.NotStarted -> "-"
                 is LoadingState.Loading -> "Carregando..."
-                is LoadingState.Success -> state.response
+                is LoadingState.Success -> Util.formatToCurrency(state.response.total)
                 is LoadingState.Failure -> state.message
             }
 
@@ -145,7 +145,7 @@ fun ProjetoAtividadeRow(
                             colorizedText(text = "Carregando...", color = Color.Black)
                         }
                         is LoadingState.Success -> {
-                            colorizedText(text = Util.formatToCurrency(state.response), color = Color.Black)
+                            colorizedText(text = Util.formatToCurrency(state.response.total), color = Color.Black)
                         }
                         is LoadingState.Failure -> {
                             colorizedText(text = state.message, color = Color.Red)
