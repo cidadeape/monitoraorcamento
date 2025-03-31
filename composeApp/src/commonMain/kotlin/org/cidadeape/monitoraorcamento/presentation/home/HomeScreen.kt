@@ -21,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -29,7 +30,6 @@ import monitoraorcamento.composeapp.generated.resources.Res
 import monitoraorcamento.composeapp.generated.resources.refresh_24dp
 import org.cidadeape.monitoraorcamento.common.AppColors
 import org.cidadeape.monitoraorcamento.common.LoadingState
-import org.cidadeape.monitoraorcamento.common.TextTitle
 import org.cidadeape.monitoraorcamento.common.Util
 import org.cidadeape.monitoraorcamento.common.colorizedText
 import org.cidadeape.monitoraorcamento.presentation.AppViewModel
@@ -67,6 +67,14 @@ fun HomeScreen(
             GrupoRow(appViewModel, grupoState)
             Spacer(modifier = Modifier.fillMaxWidth().height(1.dp).background(AppColors.SuperLightGray))
         }
+
+        Text(
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            textAlign = TextAlign.Start,
+            fontStyle = FontStyle.Italic,
+            fontSize = 12.sp,
+            text = "* Manutenção = Despesas Correntes\n* Investimentos: Despesas de Capital"
+        )
     }
 }
 
@@ -84,9 +92,22 @@ fun GrupoRow(
             .clickable { appViewModel.navigateToGrupo(grupoState) }
             .padding(16.dp)
     ) {
-        Column(modifier = Modifier.weight(1f)) {
+        Column(modifier = Modifier
+            .weight(1f)
+            .align(Alignment.CenterVertically)
+        ) {
+            Text(
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold,
+                text = grupoState.nome
+            )
+        }
 
-            Text(grupoState.nome)
+        Column(modifier = Modifier
+            .wrapContentWidth()
+            .align(Alignment.CenterVertically)
+            .padding(0.dp, 0.dp, 16.dp, 0.dp)
+        ) {
 
             when (val state = totalEmpenhadoState.value) {
                 is LoadingState.Loading -> {
@@ -95,8 +116,7 @@ fun GrupoRow(
 
                 is LoadingState.Success -> {
                     Text(
-                        modifier = Modifier.fillMaxWidth().padding(0.dp, 8.dp, 0.dp, 0.dp),
-                        textAlign = TextAlign.Start,
+                        modifier = Modifier.wrapContentWidth().padding(0.dp, 8.dp, 0.dp, 0.dp).align(Alignment.End),
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
                         text = colorizedText(
@@ -106,18 +126,15 @@ fun GrupoRow(
                     )
 
                     Text(
+                        modifier = Modifier.wrapContentWidth().align(Alignment.End),
                         fontSize = 12.sp,
-                        text = "Despesas correntes: ${Util.formatToCurrency(state.response.despCorrentes)}"
+                        text = "Manutenção: ${Util.formatToCurrency(state.response.despCorrentes)}"
                     )
 
                     Text(
+                        modifier = Modifier.wrapContentWidth().align(Alignment.End),
                         fontSize = 12.sp,
-                        text = "Despesas de capital: ${Util.formatToCurrency(state.response.despCapital)}"
-                    )
-
-                    Text(
-                        fontSize = 12.sp,
-                        text = "Reserva de contingência: ${Util.formatToCurrency(state.response.resContingencia)}"
+                        text = "Investimentos: ${Util.formatToCurrency(state.response.despCapital)}"
                     )
                 }
 

@@ -1,5 +1,6 @@
 package org.cidadeape.monitoraorcamento.data.model
 
+import org.cidadeape.monitoraorcamento.data.model.despesa.Despesa
 import org.cidadeape.monitoraorcamento.data.model.empenhos.Empenho
 import org.cidadeape.monitoraorcamento.data.model.projetosAtividades.ProjetoAtividade
 
@@ -115,5 +116,26 @@ val mockListEmpenhos = listOf(
         0.0,
         0.0,
         null
+    )
+)
+
+val mockListDespesas = listOf(
+    Despesa(
+        valLiquidado = 0.0,
+        valPagoRestos = 0.0,
+        valSuplementado = 0.0,
+        valPagoExercicio = 0.0,
+        valCanceladoReserva = 0.0,
+        valDescongelado = 0.0,
+        valReservado = 2000.0,
+        valEmpenhadoLiquido = 0.0,
+        valTotalEmpenhado = 0.0,
+        valReservadoLiquido = 2000.0,
+        valAnuladoEmpenho = 0.0,
+        valDisponivel = 42034000.0,
+        valOrcadoInicial = 42036000.0,
+        valCongelado = 2000.0,
+        valReduzido = 0.0,
+        valOrcadoAtualizado = 42036000.0
     )
 )

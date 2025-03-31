@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import org.cidadeape.monitoraorcamento.common.CategoriaDespesa
 import org.cidadeape.monitoraorcamento.common.LoadingState
-import org.cidadeape.monitoraorcamento.common.Util
 import org.cidadeape.monitoraorcamento.data.ApiSof
 import org.cidadeape.monitoraorcamento.data.IApiSof
 import org.cidadeape.monitoraorcamento.data.model.empenhos.Empenho
@@ -91,6 +90,31 @@ class AppViewModel(
             ProjetoAtividadeState("4701")
         ))
 
+    private val grupoMeioAmbiente = GrupoState(
+        nome = "Meio ambiente",
+        listaProjetosAtividades = listOf(
+            ProjetoAtividadeState("1702"),
+            ProjetoAtividadeState("1703"),
+            ProjetoAtividadeState("1704"),
+            ProjetoAtividadeState("2324"),
+            ProjetoAtividadeState("2386"),
+            ProjetoAtividadeState("2702"),
+            ProjetoAtividadeState("2703"),
+            ProjetoAtividadeState("2704"),
+            ProjetoAtividadeState("2705"),
+            ProjetoAtividadeState("5087"),
+            ProjetoAtividadeState("6651"),
+            ProjetoAtividadeState("6655"),
+            ProjetoAtividadeState("6659"),
+            ProjetoAtividadeState("6660"),
+            ProjetoAtividadeState("6669"),
+            ProjetoAtividadeState("6681"),
+            ProjetoAtividadeState("6682"),
+            ProjetoAtividadeState("6686"),
+            ProjetoAtividadeState("7117"),
+            ProjetoAtividadeState("7127")
+        ))
+
     val listaGrupos = listOf(
         grupoAsfalto,
         grupoCalcadas,
@@ -99,7 +123,8 @@ class AppViewModel(
         grupoOnibusCorredores,
         grupoOnibusTerminais,
         grupoOnibusFrota,
-        grupoOnibusCompensacoes
+        grupoOnibusCompensacoes,
+        grupoMeioAmbiente
     )
 
     val listaProjetosAtividades = mutableStateListOf<ProjetoAtividadeState>()

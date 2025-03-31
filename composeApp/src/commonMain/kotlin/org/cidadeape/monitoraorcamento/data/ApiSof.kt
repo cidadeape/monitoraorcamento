@@ -18,15 +18,18 @@ import io.ktor.http.path
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.datetime.Clock
 import kotlinx.serialization.json.Json
+import org.cidadeape.monitoraorcamento.data.model.CategoriaDespesa
 import org.cidadeape.monitoraorcamento.data.model.empenhos.EmpenhoResponse
 import org.cidadeape.monitoraorcamento.data.model.projetosAtividades.ProjetosAtividadesResponse
 import org.cidadeape.monitoraorcamento.data.model.TokenResponse
+import org.cidadeape.monitoraorcamento.data.model.despesa.DespesaResponse
 
 class ApiSof: IApiSof {
 
     private val https_protocol = URLProtocol.HTTPS
     private val baseUrl = "gateway.apilib.prefeitura.sp.gov.br/sf/sof/v4"
     private val endpointEmpenhos = "empenhos"
+    private val endpointDespesas = "despesas"
     private val endpointProjetosAtividades = "projetosAtividades"
 
     private val auth_update_token = "Basic eV9XaVBpc2U3TTdSOGVtZURQa1hUbEk5YXA0YTpJRUV0OUJIREhWbDMyeWRhbmdVWFFYSmVGM29h"
@@ -76,7 +79,6 @@ class ApiSof: IApiSof {
     }
 
     override suspend fun getEmpenhos(ano: String, mes: String, codProjetoAtividade: String): EmpenhoResponse {
-//        updateAuthToken()
         val response = client.get() {
             header(HttpHeaders.Authorization, "Bearer $token")
             url {
@@ -93,8 +95,32 @@ class ApiSof: IApiSof {
         return empenhoResponse
     }
 
+    override suspend fun getDespesas(
+        ano: String,
+        mes: String,
+        codProjetoAtividade: String,
+        categoriaDespesa: CategoriaDespesa?
+    ): DespesaResponse {
+        val response = client.get() {
+            header(HttpHeaders.Authorization, "Bearer $token")
+            url {
+                protocol = https_protocol
+                host = baseUrl
+                path(endpointDespesas)
+                parameters.append("anoDotacao", ano)
+                parameters.append("mesDotacao", mes)
+                parameters.append("codProjetoAtividade", codProjetoAtividade)
+                categoriaDespesa?.let {
+                    parameters.append("codCategoria", it.codigo)
+                }
+            }
+        }
+        val despesaResponse = response.body<DespesaResponse>()
+
+        return despesaResponse
+    }
+
     override suspend fun getProjetoAtividade(ano: String, codProjetoAtividade: String?): ProjetosAtividadesResponse {
-//        updateAuthToken()
         val response = client.get() {
             header(HttpHeaders.Authorization, "Bearer $token")
             url {

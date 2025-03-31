@@ -1,7 +1,10 @@
 package org.cidadeape.monitoraorcamento.data
 
+import org.cidadeape.monitoraorcamento.data.model.CategoriaDespesa
 import org.cidadeape.monitoraorcamento.data.model.Metadados
+import org.cidadeape.monitoraorcamento.data.model.despesa.DespesaResponse
 import org.cidadeape.monitoraorcamento.data.model.empenhos.EmpenhoResponse
+import org.cidadeape.monitoraorcamento.data.model.mockListDespesas
 import org.cidadeape.monitoraorcamento.data.model.mockListEmpenhos
 import org.cidadeape.monitoraorcamento.data.model.mockListProjetosAtividades
 import org.cidadeape.monitoraorcamento.data.model.projetosAtividades.ProjetosAtividadesResponse
@@ -20,6 +23,22 @@ class ApiSofMock: IApiSof {
                 txtStatus = "Success"
             ),
             mockListEmpenhos
+        )
+    }
+
+    override suspend fun getDespesas(
+        ano: String,
+        mes: String,
+        codProjetoAtividade: String,
+        categoriaDespesa: CategoriaDespesa?
+    ): DespesaResponse {
+        return DespesaResponse(
+            Metadados(
+                txtMensagemErro = "",
+                qtdPaginas = 1,
+                txtStatus = "Success"
+            ),
+            mockListDespesas
         )
     }
 
