@@ -97,7 +97,7 @@ fun GrupoRow(
         }
 
         Column(modifier = Modifier
-            .wrapContentWidth()
+            .weight(1f)
             .align(Alignment.CenterVertically)
             .padding(0.dp, 0.dp, 16.dp, 0.dp)
         ) {
@@ -111,6 +111,7 @@ fun GrupoRow(
                     Text(
                         modifier = Modifier.wrapContentWidth().padding(0.dp, 8.dp, 0.dp, 0.dp).align(Alignment.End),
                         fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.End,
                         fontSize = 18.sp,
                         text = colorizedText(
                             text = Util.formatToCurrency(state.response),
@@ -135,6 +136,7 @@ fun GrupoRow(
                     Text(
                         modifier = Modifier.wrapContentWidth().align(Alignment.End),
                         fontSize = 12.sp,
+                        textAlign = TextAlign.End,
                         text = "Investimentos: ${Util.formatToCurrency(state.response)}"
                     )
                 }
@@ -155,6 +157,7 @@ fun GrupoRow(
                     Text(
                         modifier = Modifier.wrapContentWidth().align(Alignment.End),
                         fontSize = 12.sp,
+                        textAlign = TextAlign.End,
                         text = "Total empenhado: ${Util.formatToCurrency(state.response)}"
                     )
                 }

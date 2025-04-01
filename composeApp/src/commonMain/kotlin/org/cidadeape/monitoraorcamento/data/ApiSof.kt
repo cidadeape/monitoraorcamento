@@ -52,8 +52,8 @@ class ApiSof: IApiSof {
             )
         }
         install(HttpTimeout) {
-            requestTimeoutMillis = 5000
-            socketTimeoutMillis = 5000
+            requestTimeoutMillis = 10000
+            socketTimeoutMillis = 10000
         }
         install(Logging) {
             logger = Logger.DEFAULT
