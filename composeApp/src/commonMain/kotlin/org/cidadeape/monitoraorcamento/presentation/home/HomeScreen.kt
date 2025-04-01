@@ -102,72 +102,73 @@ fun GrupoRow(
             .padding(0.dp, 0.dp, 16.dp, 0.dp)
         ) {
 
-            when (val state = pagoTotalState.value) {
-                is LoadingState.Loading -> {
-                    Text(colorizedText(text = "Carregando...", color = Color.Black))
-                }
+            Text(
+                modifier = Modifier.wrapContentWidth().padding(0.dp, 8.dp, 0.dp, 0.dp).align(Alignment.End),
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.End,
+                fontSize = 18.sp,
+                text = when (val state = pagoTotalState.value) {
+                    is LoadingState.Loading ->
+                        colorizedText(text = "Carregando...", color = Color.Black)
 
-                is LoadingState.Success -> {
-                    Text(
-                        modifier = Modifier.wrapContentWidth().padding(0.dp, 8.dp, 0.dp, 0.dp).align(Alignment.End),
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.End,
-                        fontSize = 18.sp,
-                        text = colorizedText(
+                    is LoadingState.Success ->
+                        colorizedText(
                             text = Util.formatToCurrency(state.response),
                             color = Color.Black
                         )
-                    )
+
+                    is LoadingState.Failure ->
+                        colorizedText(text = state.message, color = Color.Red)
+
+                    else ->
+                        colorizedText(text = "-", color = Color.Black)
                 }
+            )
 
-                is LoadingState.Failure -> {
-                    Text(colorizedText(text = state.message, color = Color.Red))
+            Text(
+                modifier = Modifier.wrapContentWidth().align(Alignment.End),
+                fontSize = 12.sp,
+                textAlign = TextAlign.End,
+                text =
+                when (val state = pagoCapitalState.value) {
+                    is LoadingState.Loading ->
+                        colorizedText(text = "Carregando...", color = Color.Black)
+
+                    is LoadingState.Success ->
+                        colorizedText(
+                            text = "Investimentos: ${Util.formatToCurrency(state.response)}",
+                            color = Color.Black
+                        )
+
+                    is LoadingState.Failure ->
+                        colorizedText(text = state.message, color = Color.Red)
+
+                    else ->
+                        colorizedText(text = "-", color = Color.Black)
                 }
+            )
 
-                else -> Text(colorizedText(text = "-", color = Color.Black))
-            }
+            Text(
+                modifier = Modifier.wrapContentWidth().align(Alignment.End),
+                fontSize = 12.sp,
+                textAlign = TextAlign.End,
+                text = when (val state = empenhadoTotalState.value) {
+                    is LoadingState.Loading ->
+                        colorizedText(text = "Carregando...", color = Color.Black)
 
-            when (val state = pagoCapitalState.value) {
-                is LoadingState.Loading -> {
-                    Text(colorizedText(text = "Carregando...", color = Color.Black))
+                    is LoadingState.Success ->
+                        colorizedText(
+                            text = "Total empenhado: ${Util.formatToCurrency(state.response)}",
+                            color = Color.Black
+                        )
+
+                    is LoadingState.Failure ->
+                        colorizedText(text = state.message, color = Color.Red)
+
+                    else ->
+                        colorizedText(text = "-", color = Color.Black)
                 }
-
-                is LoadingState.Success -> {
-                    Text(
-                        modifier = Modifier.wrapContentWidth().align(Alignment.End),
-                        fontSize = 12.sp,
-                        textAlign = TextAlign.End,
-                        text = "Investimentos: ${Util.formatToCurrency(state.response)}"
-                    )
-                }
-
-                is LoadingState.Failure -> {
-                    Text(colorizedText(text = state.message, color = Color.Red))
-                }
-
-                else -> Text(colorizedText(text = "-", color = Color.Black))
-            }
-
-            when (val state = empenhadoTotalState.value) {
-                is LoadingState.Loading -> {
-                    Text(colorizedText(text = "Carregando...", color = Color.Black))
-                }
-
-                is LoadingState.Success -> {
-                    Text(
-                        modifier = Modifier.wrapContentWidth().align(Alignment.End),
-                        fontSize = 12.sp,
-                        textAlign = TextAlign.End,
-                        text = "Total empenhado: ${Util.formatToCurrency(state.response)}"
-                    )
-                }
-
-                is LoadingState.Failure -> {
-                    Text(colorizedText(text = state.message, color = Color.Red))
-                }
-
-                else -> Text(colorizedText(text = "-", color = Color.Black))
-            }
+            )
         }
 
         Column(modifier = Modifier
