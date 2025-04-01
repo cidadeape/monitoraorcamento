@@ -17,21 +17,30 @@ sealed class Screen(
     class Grupo(
         val grupoState: GrupoState,
         canNavigateBack: Boolean,
-        navigateUp: () -> Unit,
-        title: String = "Grupo: ${grupoState.nome}"
-    ): Screen(title, canNavigateBack, navigateUp)
+        navigateUp: () -> Unit
+    ): Screen(
+        title = "${grupoState.nome} - Projetos / Atividades",
+        canNavigateBack = canNavigateBack,
+        navigateUp = navigateUp
+    )
 
     class ProjetoAtividade(
         val projetoAtividade: org.cidadeape.monitoraorcamento.data.model.projetosAtividades.ProjetoAtividade,
         canNavigateBack: Boolean,
-        navigateUp: () -> Unit,
-        override val title: String = "Projeto ${projetoAtividade.codProjetoAtividade} - ${projetoAtividade.txtDescricaoProjetoAtividade}"
-    ): Screen("Projeto", canNavigateBack, navigateUp)
+        navigateUp: () -> Unit
+    ): Screen(
+        title = "Empenhos - ${projetoAtividade.txtDescricaoProjetoAtividade}",
+        canNavigateBack = canNavigateBack,
+        navigateUp = navigateUp
+    )
 
     class Empenho(
         val empenho: org.cidadeape.monitoraorcamento.data.model.empenhos.Empenho,
         canNavigateBack: Boolean,
-        navigateUp: () -> Unit,
-        override val title: String = "Empenho ${empenho.codEmpenho} / ${empenho.anoEmpenho}"
-    ): Screen("Empenho", canNavigateBack, navigateUp)
+        navigateUp: () -> Unit
+    ): Screen(
+        title = "Empenho ${empenho.codEmpenho} / ${empenho.anoEmpenho}",
+        canNavigateBack = canNavigateBack,
+        navigateUp = navigateUp
+    )
 }

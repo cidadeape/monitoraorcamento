@@ -21,7 +21,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -58,7 +57,7 @@ fun HomeScreen(
             textAlign = TextAlign.Start,
             fontWeight = FontWeight.Bold,
             color = AppColors.Purple,
-            text = "Valores empenhados em 2025 por tema:"
+            text = "Valores pagos em 2025 por tema:"
         )
 
         val listaGrupos = remember { appViewModel.listaGrupos }
@@ -67,14 +66,6 @@ fun HomeScreen(
             GrupoRow(appViewModel, grupoState)
             Spacer(modifier = Modifier.fillMaxWidth().height(1.dp).background(AppColors.SuperLightGray))
         }
-
-        Text(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
-            textAlign = TextAlign.Start,
-            fontStyle = FontStyle.Italic,
-            fontSize = 12.sp,
-            text = "* Manutenção = Despesas Correntes\n* Investimentos: Despesas de Capital"
-        )
     }
 }
 
@@ -85,7 +76,9 @@ fun GrupoRow(
     grupoState: GrupoState
 ) {
 
-    val totalEmpenhadoState = grupoState.stateTotalEmpenhadoGrupo.collectAsState()
+    val pagoTotalState = grupoState.statePagoTotal.collectAsState()
+    val pagoCapitalState = grupoState.statePagoCapital.collectAsState()
+    val empenhadoTotalState = grupoState.stateEmpenhadoLiquidoTotal.collectAsState()
 
     Row(
         modifier = Modifier.fillMaxWidth()
@@ -109,7 +102,7 @@ fun GrupoRow(
             .padding(0.dp, 0.dp, 16.dp, 0.dp)
         ) {
 
-            when (val state = totalEmpenhadoState.value) {
+            when (val state = pagoTotalState.value) {
                 is LoadingState.Loading -> {
                     Text(colorizedText(text = "Carregando...", color = Color.Black))
                 }
@@ -120,21 +113,49 @@ fun GrupoRow(
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
                         text = colorizedText(
-                            text = Util.formatToCurrency(state.response.total),
+                            text = Util.formatToCurrency(state.response),
                             color = Color.Black
                         )
                     )
+                }
 
+                is LoadingState.Failure -> {
+                    Text(colorizedText(text = state.message, color = Color.Red))
+                }
+
+                else -> Text(colorizedText(text = "-", color = Color.Black))
+            }
+
+            when (val state = pagoCapitalState.value) {
+                is LoadingState.Loading -> {
+                    Text(colorizedText(text = "Carregando...", color = Color.Black))
+                }
+
+                is LoadingState.Success -> {
                     Text(
                         modifier = Modifier.wrapContentWidth().align(Alignment.End),
                         fontSize = 12.sp,
-                        text = "Manutenção: ${Util.formatToCurrency(state.response.despCorrentes)}"
+                        text = "Investimentos: ${Util.formatToCurrency(state.response)}"
                     )
+                }
 
+                is LoadingState.Failure -> {
+                    Text(colorizedText(text = state.message, color = Color.Red))
+                }
+
+                else -> Text(colorizedText(text = "-", color = Color.Black))
+            }
+
+            when (val state = empenhadoTotalState.value) {
+                is LoadingState.Loading -> {
+                    Text(colorizedText(text = "Carregando...", color = Color.Black))
+                }
+
+                is LoadingState.Success -> {
                     Text(
                         modifier = Modifier.wrapContentWidth().align(Alignment.End),
                         fontSize = 12.sp,
-                        text = "Investimentos: ${Util.formatToCurrency(state.response.despCapital)}"
+                        text = "Total empenhado: ${Util.formatToCurrency(state.response)}"
                     )
                 }
 

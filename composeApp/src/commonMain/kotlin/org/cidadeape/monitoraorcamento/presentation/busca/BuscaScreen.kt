@@ -79,7 +79,7 @@ fun ProjetoAtividadeRow(
 ) {
 
     val projetoState = projetoAtividadeState.stateProjeto.collectAsState()
-    val totalEmpenhadoState = projetoAtividadeState.stateTotalEmpenhado.collectAsState()
+    val totalEmpenhadoState = projetoAtividadeState.stateDespesasTotal.collectAsState()
 
     Row(
         modifier = Modifier.fillMaxWidth()
@@ -125,7 +125,7 @@ fun ProjetoAtividadeRow(
                             colorizedText(text = "Carregando...", color = Color.Black)
                         }
                         is LoadingState.Success -> {
-                            colorizedText(text = Util.formatToCurrency(state.response.total), color = Color.Black)
+                            colorizedText(text = Util.formatToCurrency(state.response.empenhadoLiquido), color = Color.Black)
                         }
                         is LoadingState.Failure -> {
                             colorizedText(text = state.message, color = Color.Red)

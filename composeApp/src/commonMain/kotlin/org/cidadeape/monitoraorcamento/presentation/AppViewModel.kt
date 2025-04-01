@@ -8,17 +8,19 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
-import org.cidadeape.monitoraorcamento.common.CategoriaDespesa
 import org.cidadeape.monitoraorcamento.common.LoadingState
 import org.cidadeape.monitoraorcamento.data.ApiSof
 import org.cidadeape.monitoraorcamento.data.IApiSof
+import org.cidadeape.monitoraorcamento.data.model.CategoriaDespesa
 import org.cidadeape.monitoraorcamento.data.model.empenhos.Empenho
 import org.cidadeape.monitoraorcamento.data.model.projetosAtividades.ProjetoAtividade
 import org.cidadeape.monitoraorcamento.presentation.grupo.GrupoState
 import org.cidadeape.monitoraorcamento.presentation.grupo.ProjetoAtividadeState
-import org.cidadeape.monitoraorcamento.presentation.grupo.TotalEmpenhos
+import org.cidadeape.monitoraorcamento.presentation.grupo.TotalDespesas
 import kotlin.reflect.KClass
 
 class AppViewModel(
@@ -63,7 +65,7 @@ class AppViewModel(
             ProjetoAtividadeState("2099"),
             ProjetoAtividadeState("5391"),
             ProjetoAtividadeState("5392"),
-            ProjetoAtividadeState("5393"),
+//            ProjetoAtividadeState("5393"),
         ))
 
     private val grupoOnibusTerminais = GrupoState(
@@ -72,7 +74,7 @@ class AppViewModel(
             ProjetoAtividadeState("1095"),
             ProjetoAtividadeState("1096"),
             ProjetoAtividadeState("2096"),
-            ProjetoAtividadeState("3749"),
+//            ProjetoAtividadeState("3749"),
             ProjetoAtividadeState("4663"),
         ))
 
@@ -80,8 +82,8 @@ class AppViewModel(
         nome = "Ônibus - Frota",
         listaProjetosAtividades = listOf(
             ProjetoAtividadeState("1800"),
-            ProjetoAtividadeState("3800"),
-            ProjetoAtividadeState("3801")
+//            ProjetoAtividadeState("3800"),
+//            ProjetoAtividadeState("3801")
         ))
 
     private val grupoOnibusCompensacoes = GrupoState(
@@ -132,20 +134,19 @@ class AppViewModel(
     val fullList: MutableStateFlow<LoadingState<List<ProjetoAtividade>>> = MutableStateFlow(
         LoadingState.NotStarted())
 
-    val refreshingState = mutableStateOf(false)
-
     init {
         load()
     }
 
-    fun load() = launchCoroutine {
-        refreshingState.value = true
+    fun load() {
         loadAllGrupos()
-        loadSearchList()
-        refreshingState.value = false
+
+        launchCoroutine {
+            loadSearchList()
+        }
     }
 
-    private fun loadAllGrupos() = launchCoroutine {
+    private fun loadAllGrupos() {
         for (grupo in listaGrupos) {
             loadGrupo(grupo)
         }
@@ -153,32 +154,56 @@ class AppViewModel(
 
     fun loadGrupo(grupoState: GrupoState) = launchCoroutine {
         grupoState.refreshing.value = true
-        grupoState.stateTotalEmpenhadoGrupo.value = LoadingState.Loading()
-        for (projeto in grupoState.listaProjetosAtividades) {
-            loadProjetoAtividadeComTotalEmpenhado(projeto)
+        grupoState.statePagoTotal.value = LoadingState.Loading()
+        grupoState.stateEmpenhadoLiquidoTotal.value = LoadingState.Loading()
+        grupoState.statePagoCapital.value = LoadingState.Loading()
+
+        val jobs = grupoState.listaProjetosAtividades.map {
+            launchCoroutine {
+                loadProjetoAtividadeComTotalDespesas(it)
+            }
         }
+        jobs.joinAll()
 
-        val totalEmpenho = TotalEmpenhos(0.0, 0.0, 0.0, 0.0)
-        val failedList = grupoState.listaProjetosAtividades.filter {
+        var pagoGrupo = 0.0
+        var empenhadoLiquidoGrupo = 0.0
+        var pagoCapitalGrupo = 0.0
 
-            when (val state = it.stateTotalEmpenhado.value) {
+        var failedDespesasTotal = false
+        var failedPagoCapital = false
+
+        grupoState.listaProjetosAtividades.forEach {
+
+            failedDespesasTotal = when (val state = it.stateDespesasTotal.value) {
                 is LoadingState.Success -> {
-                    totalEmpenho.total += state.response.total
-                    totalEmpenho.despCorrentes += state.response.despCorrentes
-                    totalEmpenho.despCapital += state.response.despCapital
-                    totalEmpenho.resContingencia += state.response.resContingencia
+                    empenhadoLiquidoGrupo += state.response.empenhadoLiquido
+                    pagoGrupo += state.response.pago
                     false
                 }
-                else -> {
-                    true
+                else -> true
+            }
+
+            failedPagoCapital = when (val state = it.stateDespesasCapital.value) {
+                is LoadingState.Success -> {
+                    pagoCapitalGrupo += state.response.pago
+                    false
                 }
+                else -> true
             }
         }
 
-        if (failedList.isNotEmpty()) {
-            grupoState.stateTotalEmpenhadoGrupo.value = LoadingState.Failure("Erro ao carregar totais")
+        if (failedDespesasTotal) {
+            grupoState.stateEmpenhadoLiquidoTotal.value = LoadingState.Failure("Erro ao carregar despesas totais")
+            grupoState.statePagoTotal.value = LoadingState.Failure("Erro ao carregar despesas totais")
         } else {
-            grupoState.stateTotalEmpenhadoGrupo.value = LoadingState.Success(totalEmpenho)
+            grupoState.stateEmpenhadoLiquidoTotal.value = LoadingState.Success(empenhadoLiquidoGrupo)
+            grupoState.statePagoTotal.value = LoadingState.Success(pagoGrupo)
+        }
+
+        if (failedPagoCapital) {
+            grupoState.statePagoCapital.value = LoadingState.Failure("Erro ao carregar despesas de capital")
+        } else {
+            grupoState.statePagoCapital.value = LoadingState.Success(pagoCapitalGrupo)
         }
 
         grupoState.refreshing.value = false
@@ -200,7 +225,7 @@ class AppViewModel(
 
         listaProjetosAtividades.add(0, projetoAtividadeState)
         launchCoroutine {
-            loadProjetoAtividadeComTotalEmpenhado(projetoAtividadeState)
+            loadProjetoAtividadeComTotalDespesas(projetoAtividadeState)
         }
     }
 
@@ -216,10 +241,10 @@ class AppViewModel(
             }
     }
 
-    private suspend fun loadProjetoAtividadeComTotalEmpenhado(projetoAtividadeState: ProjetoAtividadeState) {
+    private suspend fun loadProjetoAtividadeComTotalDespesas(projetoAtividadeState: ProjetoAtividadeState) {
         if (projetoAtividadeState.stateProjeto.value !is LoadingState.Success) loadProjetoNome(projetoAtividadeState)
 
-        loadTotalEmpenhos(projetoAtividadeState)
+        loadTotalDespesas(projetoAtividadeState)
     }
 
     private suspend fun loadProjetoNome(projetoAtividadeState: ProjetoAtividadeState) {
@@ -237,46 +262,60 @@ class AppViewModel(
         }
     }
 
-    private suspend fun loadTotalEmpenhos(projetoAtividadeState: ProjetoAtividadeState) {
+    private suspend fun loadTotalDespesas(projetoAtividadeState: ProjetoAtividadeState) {
 
-        projetoAtividadeState.stateTotalEmpenhado.value = LoadingState.Loading()
+        try {
+            projetoAtividadeState.stateDespesasTotal.value = LoadingState.Loading()
 
-        projetoAtividadeState.stateTotalEmpenhado.value = try {
-            val listaEmpenhos = sofApi
-                .getEmpenhos("2025", "12", projetoAtividadeState.codigo)
-                .lstEmpenhos
+            val despesasResponse = sofApi
+                .getDespesas("2025", "12", projetoAtividadeState.codigo)
 
-            val totalEmpenhado = listaEmpenhos
-                .sumOf { it.valEmpenhadoLiquido }
+            val totalDespesas =
+                if (despesasResponse.metaDados.txtStatus == "SEM REGISTROS") {
+                    TotalDespesas(0.0, 0.0, 0.0, 0.0)
+                } else {
+                    val despesas = despesasResponse.lstDespesas[0]
+                    TotalDespesas(
+                        empenhadoLiquido = despesas.valEmpenhadoLiquido,
+                        pago = despesas.valPagoRestos + despesas.valPagoExercicio,
+                        orcadoInicial = despesas.valOrcadoInicial,
+                        orcadoAtualizado = despesas.valOrcadoAtualizado
+                    )
+                }
 
-            val despCorrentes = listaEmpenhos
-                .filter { it.codCategoria == CategoriaDespesa.DESP_CORRENTES }
-                .sumOf { it.valEmpenhadoLiquido }
-
-            val despCapital = listaEmpenhos
-                .filter { it.codCategoria == CategoriaDespesa.DESP_CAPITAL }
-                .sumOf { it.valEmpenhadoLiquido }
-
-            val resContingencia = listaEmpenhos
-                .filter { it.codCategoria == CategoriaDespesa.RES_CONTINGENCIA }
-                .sumOf { it.valEmpenhadoLiquido }
-
-            val empenhos = TotalEmpenhos(
-                totalEmpenhado,
-                despCorrentes,
-                despCapital,
-                resContingencia
-            )
-
-            LoadingState.Success(empenhos)
+            projetoAtividadeState.stateDespesasTotal.value = LoadingState.Success(totalDespesas)
         } catch (e: Exception) {
             e.printStackTrace()
-            LoadingState.Failure("Erro ao carregar empenhos: ${e::class.simpleName}")
+            projetoAtividadeState.stateDespesasTotal.value = LoadingState.Failure("Erro ao carregar empenhos: ${e::class.simpleName}")
+        }
+
+        try {
+            projetoAtividadeState.stateDespesasCapital.value = LoadingState.Loading()
+            val despesasResponse = sofApi
+                .getDespesas("2025", "12", projetoAtividadeState.codigo, CategoriaDespesa.DESPESAS_CAPITAL)
+
+            val totalDespesas =
+                if (despesasResponse.metaDados.txtStatus == "SEM REGISTROS") {
+                    TotalDespesas(0.0, 0.0, 0.0, 0.0)
+                } else {
+                    val despesas = despesasResponse.lstDespesas[0]
+                    TotalDespesas(
+                        empenhadoLiquido = despesas.valEmpenhadoLiquido,
+                        pago = despesas.valPagoRestos + despesas.valPagoExercicio,
+                        orcadoInicial = despesas.valOrcadoInicial,
+                        orcadoAtualizado = despesas.valOrcadoAtualizado
+                    )
+                }
+
+            projetoAtividadeState.stateDespesasCapital.value = LoadingState.Success(totalDespesas)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            projetoAtividadeState.stateDespesasCapital.value = LoadingState.Failure("Erro ao carregar empenhos: ${e::class.simpleName}")
         }
     }
 
 
-    private fun launchCoroutine(block: suspend  () -> Unit) =
+    private fun launchCoroutine(block: suspend  () -> Unit): Job =
         viewModelScope.launch(Dispatchers.Default) {
             block.invoke()
         }

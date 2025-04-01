@@ -13,7 +13,7 @@ interface IApiSof {
         ano: String,
         mes: String,
         codProjetoAtividade: String,
-        categoriaDespesa: CategoriaDespesa?
+        categoriaDespesa: CategoriaDespesa? = null
     ): DespesaResponse
 
     suspend fun getProjetoAtividade(ano: String, codProjetoAtividade: String?): ProjetosAtividadesResponse

@@ -10,18 +10,21 @@ data class GrupoState (
     val nome: String,
     val listaProjetosAtividades: List<ProjetoAtividadeState>,
     val refreshing: MutableState<Boolean> = mutableStateOf(false),
-    val stateTotalEmpenhadoGrupo: MutableStateFlow<LoadingState<TotalEmpenhos>> = MutableStateFlow(LoadingState.NotStarted())
+    val statePagoTotal: MutableStateFlow<LoadingState<Double>> = MutableStateFlow(LoadingState.NotStarted()),
+    val statePagoCapital: MutableStateFlow<LoadingState<Double>> = MutableStateFlow(LoadingState.NotStarted()),
+    val stateEmpenhadoLiquidoTotal: MutableStateFlow<LoadingState<Double>> = MutableStateFlow(LoadingState.NotStarted())
 )
 
 data class ProjetoAtividadeState (
     val codigo: String,
     var stateProjeto: MutableStateFlow<LoadingState<ProjetoAtividade>> = MutableStateFlow(LoadingState.NotStarted()),
-    var stateTotalEmpenhado: MutableStateFlow<LoadingState<TotalEmpenhos>> = MutableStateFlow(LoadingState.NotStarted())
+    var stateDespesasTotal: MutableStateFlow<LoadingState<TotalDespesas>> = MutableStateFlow(LoadingState.NotStarted()),
+    var stateDespesasCapital: MutableStateFlow<LoadingState<TotalDespesas>> = MutableStateFlow(LoadingState.NotStarted())
 )
 
-data class TotalEmpenhos(
-    var total: Double,
-    var despCorrentes: Double,
-    var despCapital: Double,
-    var resContingencia: Double,
+data class TotalDespesas(
+    var orcadoInicial: Double,
+    var orcadoAtualizado: Double,
+    var empenhadoLiquido: Double,
+    var pago: Double
 )

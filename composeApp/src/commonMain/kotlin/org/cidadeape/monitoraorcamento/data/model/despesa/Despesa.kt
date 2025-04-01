@@ -1,5 +1,8 @@
 package org.cidadeape.monitoraorcamento.data.model.despesa
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Despesa(
     val valLiquidado: Double,
     val valPagoRestos: Double,
