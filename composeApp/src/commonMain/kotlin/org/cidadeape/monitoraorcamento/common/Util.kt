@@ -14,3 +14,8 @@ object Util {
             .reversed()
     }
 }
+
+fun Double.formatToBrasil(): String {
+    val replaced = this.toString().replace(".", ",")
+    return "\"$replaced\""
+}

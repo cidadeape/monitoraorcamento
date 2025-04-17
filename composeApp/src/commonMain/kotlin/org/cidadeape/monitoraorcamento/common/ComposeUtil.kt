@@ -16,6 +16,8 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.sp
+import org.cidadeape.monitoraorcamento.data.model.empenhos.Empenho
+import org.cidadeape.monitoraorcamento.data.model.projetosAtividades.ProjetoAtividade
 
 fun colorizedText(color: Color, text: String): AnnotatedString {
 
@@ -64,6 +66,9 @@ expect fun ShowMessage(message: String)
 
 @Composable
 expect fun OpenInNewWindow(url: String)
+
+@Composable
+expect fun DownloadCsv(projetoAtividade: ProjetoAtividade, listaEmpenhos: List<Empenho>)
 
 object AppColors {
 
