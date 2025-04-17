@@ -129,7 +129,7 @@ class AppViewModel(
         grupoMeioAmbiente
     )
 
-    val listaProjetosAtividades = mutableStateListOf<ProjetoAtividadeState>()
+    val listaCustomizadaProjetosAtividades = mutableStateListOf<ProjetoAtividadeState>()
 
     val fullList: MutableStateFlow<LoadingState<List<ProjetoAtividade>>> = MutableStateFlow(
         LoadingState.NotStarted())
@@ -209,21 +209,24 @@ class AppViewModel(
         grupoState.refreshing.value = false
     }
 
-    fun removeFromList(projetoAtividadeState: ProjetoAtividadeState) {
+    fun removerDaListaCustomizada(projetoAtividadeState: ProjetoAtividadeState) {
 
-        listaProjetosAtividades.remove(projetoAtividadeState)
+        listaCustomizadaProjetosAtividades.remove(projetoAtividadeState)
     }
 
-    fun addToList(projetoAtividade: ProjetoAtividade) {
+    fun adicionarAListaCustomizada(projetoAtividade: ProjetoAtividade) {
+
+        if (listaCustomizadaProjetosAtividades
+            .map { it.codigo }
+            .contains(projetoAtividade.codProjetoAtividade)
+        ) return
 
         val projetoAtividadeState = ProjetoAtividadeState(
             codigo = projetoAtividade.codProjetoAtividade,
             stateProjeto = MutableStateFlow(LoadingState.Success(projetoAtividade))
         )
 
-        if (listaProjetosAtividades.contains(projetoAtividadeState)) return
-
-        listaProjetosAtividades.add(0, projetoAtividadeState)
+        listaCustomizadaProjetosAtividades.add(0, projetoAtividadeState)
         launchCoroutine {
             loadProjetoAtividadeComTotalDespesas(projetoAtividadeState)
         }

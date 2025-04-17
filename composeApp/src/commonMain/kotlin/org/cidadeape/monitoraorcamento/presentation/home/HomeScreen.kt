@@ -57,7 +57,7 @@ fun HomeScreen(
             textAlign = TextAlign.Start,
             fontWeight = FontWeight.Bold,
             color = AppColors.Purple,
-            text = "Valores pagos em 2025 por tema:"
+            text = "Mobilidade Urbana - Valores pagos em 2025 por tema"
         )
 
         val listaGrupos = remember { appViewModel.listaGrupos }

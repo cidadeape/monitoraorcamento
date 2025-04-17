@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -52,11 +53,78 @@ fun BuscaScreen(
         modifier = Modifier.fillMaxSize()
     ) {
 
-        AutocompleteTextView(appViewModel)
+        val fullListState = appViewModel.fullList.collectAsState()
 
-        val lista = remember { appViewModel.listaProjetosAtividades }
+        when (val state = fullListState.value) {
+            is LoadingState.Success -> {
+                ListLoadedView(appViewModel, state.response)
+            }
+            is LoadingState.Loading -> {
+                Text(
+                    modifier = Modifier.padding(16.dp),
+                    text = "Carregando..."
+                )
+            }
+            else -> {
+                Text(
+                    modifier = Modifier.padding(16.dp),
+                    text = "Erro ao carregar lista de projetos e atividades"
+                )
+            }
+        }
+    }
+}
 
-        LazyColumn (
+@Composable
+fun ListLoadedView(
+    appViewModel: AppViewModel,
+    fullList: List<ProjetoAtividade>
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth().padding(16.dp)
+    ) {
+
+        Text("Buscar projetos e atividades por código")
+
+        var textCodigos by remember { mutableStateOf("") }
+
+        TextField(
+            modifier = Modifier.fillMaxWidth().padding(0.dp, 16.dp, 0.dp, 16.dp),
+            value = textCodigos,
+            onValueChange = { newValue ->
+                textCodigos = newValue
+            },
+            placeholder = {
+                Text(text = "Digite os códigos separados por vírgula")
+            },
+            colors = TextFieldDefaults.colors(
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+            )
+        )
+
+        Button(
+            modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 32.dp),
+            onClick = {
+                val codigos = textCodigos.split(",").map { it.trim() }
+
+                val projetos = fullList.filter { codigos.contains(it.codProjetoAtividade) }
+
+                projetos.forEach {
+                    appViewModel.adicionarAListaCustomizada(it)
+                }
+            }
+        ) {
+            Text("Carregar")
+        }
+
+        Text("Buscar projeto e atividade por termo")
+
+        AutocompleteTextView(appViewModel, fullList)
+
+        val lista = remember { appViewModel.listaCustomizadaProjetosAtividades }
+
+        LazyColumn(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -67,6 +135,73 @@ fun BuscaScreen(
                     modifier = Modifier.fillMaxWidth().height(1.dp)
                         .background(AppColors.SuperLightGray)
                 )
+            }
+        }
+    }
+}
+
+@Composable
+fun AutocompleteTextView(
+    viewModel: AppViewModel,
+    fullList: List<ProjetoAtividade>
+) {
+
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+
+        var expanded by remember { mutableStateOf(false) }
+
+        var inputText by remember { mutableStateOf("") }
+
+        var filteredOptions = if (inputText.length < 3) {
+            listOf()
+        } else {
+            fullList.filter {
+                formatProjetoAtividade(it).contains(inputText, ignoreCase = true)
+            }
+        }
+
+        TextField(
+            modifier = Modifier.fillMaxWidth().padding(0.dp, 16.dp, 0.dp, 0.dp),
+            value = inputText,
+            onValueChange = { newValue ->
+                inputText = newValue
+                expanded = true
+            },
+            placeholder = {
+                Text(text = "Digite um termo para filtrar")
+            },
+            colors = TextFieldDefaults.colors(
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+            )
+        )
+
+        if (filteredOptions.isNotEmpty() && expanded) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
+                    .background(Color.Gray)
+            ) {
+                for (option in filteredOptions) {
+                    DropdownMenuItem(
+                        modifier = Modifier
+                            .padding(0.dp, 0.dp, 0.dp, 1.dp)
+                            .background(Color.LightGray)
+                            .padding(4.dp),
+                        onClick = {
+                            filteredOptions = listOf()
+                            inputText = ""
+                            expanded = false
+                            viewModel.adicionarAListaCustomizada(option)
+                        },
+                        text = {
+                            Text(text = formatProjetoAtividade(option))
+                        }
+                    )
+                }
             }
         }
     }
@@ -88,7 +223,7 @@ fun ProjetoAtividadeRow(
                 state?.let {
                     appViewModel.navigateToProjetoAtividade(state.response, appViewModel::navigateToHome)
                 }
-            }.padding(16.dp)
+            }.padding(0.dp, 16.dp, 0.dp, 16.dp)
     ) {
         Column(modifier = Modifier.weight(1f)) {
 
@@ -121,17 +256,17 @@ fun ProjetoAtividadeRow(
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
                 text = when (val state = totalEmpenhadoState.value) {
-                        is LoadingState.Loading -> {
-                            colorizedText(text = "Carregando...", color = Color.Black)
-                        }
-                        is LoadingState.Success -> {
-                            colorizedText(text = Util.formatToCurrency(state.response.empenhadoLiquido), color = Color.Black)
-                        }
-                        is LoadingState.Failure -> {
-                            colorizedText(text = state.message, color = Color.Red)
-                        }
-                        else -> colorizedText(text = "-", color = Color.Black)
+                    is LoadingState.Loading -> {
+                        colorizedText(text = "Carregando...", color = Color.Black)
                     }
+                    is LoadingState.Success -> {
+                        colorizedText(text = Util.formatToCurrency(state.response.empenhadoLiquido), color = Color.Black)
+                    }
+                    is LoadingState.Failure -> {
+                        colorizedText(text = state.message, color = Color.Red)
+                    }
+                    else -> colorizedText(text = "-", color = Color.Black)
+                }
             )
         }
         Column(modifier = Modifier
@@ -143,80 +278,10 @@ fun ProjetoAtividadeRow(
                 modifier = Modifier
                     .padding(8.dp)
                     .size(24.dp)
-                    .clickable { appViewModel.removeFromList(projetoAtividadeState) },
+                    .clickable { appViewModel.removerDaListaCustomizada(projetoAtividadeState) },
                 bitmap = imageResource(Res.drawable.close_24dp),
                 contentDescription = "Remover"
             )
-        }
-    }
-}
-
-
-@Composable
-fun AutocompleteTextView(
-    viewModel: AppViewModel
-) {
-
-    Column(
-        modifier = Modifier.fillMaxWidth().padding(16.dp)
-    ) {
-        val fullListState = viewModel.fullList.collectAsState()
-
-        var expanded by remember { mutableStateOf(false) }
-
-        var inputText by remember { mutableStateOf("") }
-
-        val state = fullListState.value
-
-        var filteredOptions = if (inputText.length < 3 || state !is LoadingState.Success) {
-            listOf()
-        } else {
-            state.response.filter {
-                formatProjetoAtividade(it).contains(inputText, ignoreCase = true)
-            }
-        }
-
-        TextField(
-            modifier = Modifier.fillMaxWidth(),
-            value = inputText,
-            onValueChange = { newValue ->
-                inputText = newValue
-                expanded = true
-            },
-            placeholder = {
-                Text(text = "Buscar projeto / atividade")
-            },
-            colors = TextFieldDefaults.colors(
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-            )
-        )
-
-        if (filteredOptions.isNotEmpty() && expanded) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .verticalScroll(rememberScrollState())
-                    .background(Color.Gray)
-            ) {
-                for (option in filteredOptions) {
-                    DropdownMenuItem(
-                        modifier = Modifier
-                            .padding(0.dp, 0.dp, 0.dp, 1.dp)
-                            .background(Color.LightGray)
-                            .padding(4.dp),
-                        onClick = {
-                            filteredOptions = listOf()
-                            inputText = ""
-                            expanded = false
-                            viewModel.addToList(option)
-                        },
-                        text = {
-                            Text(text = formatProjetoAtividade(option))
-                        }
-                    )
-                }
-            }
         }
     }
 }
