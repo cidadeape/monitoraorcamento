@@ -31,7 +31,6 @@ import androidx.compose.ui.unit.sp
 import org.cidadeape.monitoraorcamento.common.AppColors
 import org.cidadeape.monitoraorcamento.common.DownloadCsv
 import org.cidadeape.monitoraorcamento.common.LoadingState
-import org.cidadeape.monitoraorcamento.common.OpenInNewWindow
 import org.cidadeape.monitoraorcamento.common.TextTitle
 import org.cidadeape.monitoraorcamento.common.Util
 import org.cidadeape.monitoraorcamento.data.model.empenhos.Empenho
