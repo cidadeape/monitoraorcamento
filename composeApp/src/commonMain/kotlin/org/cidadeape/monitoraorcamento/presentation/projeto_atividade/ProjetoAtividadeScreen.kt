@@ -89,7 +89,7 @@ fun ListaEmpenhos(
         is LoadingState.Failure -> Text(state.message)
         is LoadingState.Success -> {
             Text(
-                modifier = Modifier.fillMaxWidth().padding(0.dp, 0.dp, 0.dp, 32.dp),
+                modifier = Modifier.fillMaxWidth().padding(0.dp, 0.dp, 0.dp, 16.dp),
                 textAlign = TextAlign.Start,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
@@ -108,11 +108,12 @@ fun ListaEmpenhos(
 
                 var downloadCsv by remember { mutableStateOf(false) }
                 Button(
+                    modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 16.dp),
                     onClick = {
                         downloadCsv = true
                     }
                 ) {
-                    Text("Download Empenhos")
+                    Text("Baixar lista de empenhos")
                 }
                 if (downloadCsv) {
                     DownloadCsv(viewModel.projetoAtividade, state.response)
