@@ -27,8 +27,6 @@ class AppViewModel(
     private val sofApi: IApiSof = ApiSof()
 ): ViewModel() {
 
-    var screenState: MutableState<Screen> = mutableStateOf(Screen.Home())
-
     private val grupoAsfalto = GrupoState(
         nome = "Asfalto",
         listaProjetosAtividades = listOf(
@@ -323,42 +321,48 @@ class AppViewModel(
             block.invoke()
         }
 
-    fun navigateToHome() {
-        screenState.value = Screen.Home()
-    }
-
-    fun navigateToBusca() {
-        screenState.value = Screen.Busca(::navigateToHome)
-    }
-
-    fun navigateToProjetoAtividade(projetoAtividade: ProjetoAtividade, navigateUp: (() -> Unit)?) {
-        screenState.value = Screen.ProjetoAtividade(
-            projetoAtividade,
-            true,
-            navigateUp ?: ::navigateToHome
-        )
-    }
-
-    fun navigateToEmpenho(projetoAtividade: ProjetoAtividade, empenho: Empenho) {
-        screenState.value = Screen.Empenho(
-            empenho,
-            true,
-            { navigateToProjetoAtividade(projetoAtividade, null) }
-        )
-    }
-
-    fun navigateToGrupo(grupoState: GrupoState) {
-        screenState.value = Screen.Grupo(
-            grupoState,
-            true,
-            ::navigateToHome
-        )
-    }
 
     @Suppress("UNCHECKED_CAST")
     class Factory: ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T {
             return AppViewModel() as T
+        }
+    }
+
+    companion object {
+
+        var screenState: MutableState<Screen> = mutableStateOf(Screen.Home())
+
+        fun navigateToHome() {
+            screenState.value = Screen.Home()
+        }
+
+        fun navigateToBusca() {
+            screenState.value = Screen.Busca(::navigateToHome)
+        }
+
+        fun navigateToProjetoAtividade(projetoAtividade: ProjetoAtividade, navigateUp: (() -> Unit)?) {
+            screenState.value = Screen.ProjetoAtividade(
+                projetoAtividade,
+                true,
+                navigateUp ?: ::navigateToHome
+            )
+        }
+
+        fun navigateToEmpenho(projetoAtividade: ProjetoAtividade, empenho: Empenho) {
+            screenState.value = Screen.Empenho(
+                empenho,
+                true,
+                { navigateToProjetoAtividade(projetoAtividade, null) }
+            )
+        }
+
+        fun navigateToGrupo(grupoState: GrupoState) {
+            screenState.value = Screen.Grupo(
+                grupoState,
+                true,
+                ::navigateToHome
+            )
         }
     }
 

@@ -39,7 +39,6 @@ import org.cidadeape.monitoraorcamento.presentation.AppViewModel
 
 @Composable
 fun ProjetoAtividadeScreen(
-    appViewModel: AppViewModel,
     viewModel: ProjetoAtividadeViewModel,
     projetoAtividade: ProjetoAtividade
 ) {
@@ -64,14 +63,13 @@ fun ProjetoAtividadeScreen(
         }
 
         Column (modifier = Modifier.padding(24.dp, 0.dp, 8.dp, 0.dp)) {
-            ListaEmpenhos(appViewModel, viewModel)
+            ListaEmpenhos(viewModel)
         }
     }
 }
 
 @Composable
 fun ListaEmpenhos(
-    appViewModel: AppViewModel,
     viewModel: ProjetoAtividadeViewModel
 ) {
 
@@ -127,7 +125,7 @@ fun ListaEmpenhos(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     for (empenho in state.response) {
-                        EmpenhoRow(appViewModel, viewModel.projetoAtividade, empenho)
+                        EmpenhoRow(viewModel.projetoAtividade, empenho)
                         Spacer(modifier = Modifier.fillMaxWidth().padding(0.dp, 8.dp, 0.dp, 8.dp).height(1.dp).background(AppColors.SuperLightGray))
                     }
                 }
@@ -141,7 +139,6 @@ fun ListaEmpenhos(
 
 @Composable
 fun EmpenhoRow(
-    appViewModel: AppViewModel,
     projetoAtividade: ProjetoAtividade,
     empenho: Empenho
 ) {
@@ -149,7 +146,7 @@ fun EmpenhoRow(
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                appViewModel.navigateToEmpenho(projetoAtividade, empenho)
+                AppViewModel.navigateToEmpenho(projetoAtividade, empenho)
             }
     ) {
         Row (

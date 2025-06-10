@@ -72,7 +72,7 @@ fun AppTopBar(
 @Preview
 fun App(viewModel: AppViewModel = viewModel<AppViewModel>(factory = AppViewModel.Factory())) {
 
-    val screenState by remember { viewModel.screenState }
+    val screenState by remember { AppViewModel.screenState }
 
     MaterialTheme {
         Scaffold(
@@ -89,7 +89,6 @@ fun App(viewModel: AppViewModel = viewModel<AppViewModel>(factory = AppViewModel
                         is Screen.Busca -> BuscaScreen(viewModel)
                         is Screen.Grupo -> GrupoScreen(viewModel, screen.grupoState)
                         is Screen.ProjetoAtividade -> ProjetoAtividadeScreen(
-                            viewModel,
                             viewModel<ProjetoAtividadeViewModel>(
                                 factory = ProjetoAtividadeViewModel.Factory()
                             ),

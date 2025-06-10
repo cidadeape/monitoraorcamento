@@ -96,9 +96,8 @@ fun GrupoScreen(
 
                     items(lista) { projetoAtividade ->
                         ProjetoAtividadeRow(
-                            appViewModel = appViewModel,
                             projetoAtividadeState = projetoAtividade,
-                            navigateUp = { appViewModel.navigateToGrupo(grupoState) }
+                            navigateUp = { AppViewModel.navigateToGrupo(grupoState) }
                         )
                         Spacer(modifier = Modifier.fillMaxWidth().height(1.dp).background(AppColors.SuperLightGray))
                     }
@@ -110,7 +109,6 @@ fun GrupoScreen(
 
 @Composable
 fun ProjetoAtividadeRow(
-    appViewModel: AppViewModel,
     projetoAtividadeState: ProjetoAtividadeState,
     navigateUp: () -> Unit
 ) {
@@ -123,7 +121,7 @@ fun ProjetoAtividadeRow(
             .clickable {
                 val state = projetoState.value as? LoadingState.Success<ProjetoAtividade>
                 state?.let {
-                    appViewModel.navigateToProjetoAtividade(state.response, navigateUp)
+                    AppViewModel.navigateToProjetoAtividade(state.response, navigateUp)
                 }
             }.padding(16.dp)
     ) {

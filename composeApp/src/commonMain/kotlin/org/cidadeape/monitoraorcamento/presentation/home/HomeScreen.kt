@@ -45,7 +45,7 @@ fun HomeScreen(
 
         Text(
             modifier = Modifier.fillMaxWidth().padding(16.dp).clickable {
-                appViewModel.navigateToBusca()
+                AppViewModel.navigateToBusca()
             },
             color = AppColors.Purple,
             textAlign = TextAlign.Start,
@@ -82,7 +82,7 @@ fun GrupoRow(
 
     Row(
         modifier = Modifier.fillMaxWidth()
-            .clickable { appViewModel.navigateToGrupo(grupoState) }
+            .clickable { AppViewModel.navigateToGrupo(grupoState) }
             .padding(16.dp)
     ) {
         Column(modifier = Modifier

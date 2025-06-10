@@ -221,7 +221,7 @@ fun ProjetoAtividadeRow(
             .clickable {
                 val state = projetoState.value as? LoadingState.Success<ProjetoAtividade>
                 state?.let {
-                    appViewModel.navigateToProjetoAtividade(state.response, appViewModel::navigateToHome)
+                    AppViewModel.navigateToProjetoAtividade(state.response, AppViewModel::navigateToHome)
                 }
             }.padding(0.dp, 16.dp, 0.dp, 16.dp)
     ) {
