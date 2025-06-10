@@ -1,4 +1,4 @@
-package org.cidadeape.monitoraorcamento.presentation.empenho
+package org.cidadeape.monitoraorcamento.presentation.screen
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable

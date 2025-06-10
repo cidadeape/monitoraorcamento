@@ -1,4 +1,4 @@
-package org.cidadeape.monitoraorcamento.presentation.busca_projeto
+package org.cidadeape.monitoraorcamento.presentation.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -42,7 +42,6 @@ import org.cidadeape.monitoraorcamento.common.Util
 import org.cidadeape.monitoraorcamento.common.colorizedText
 import org.cidadeape.monitoraorcamento.data.model.projetosAtividades.ProjetoAtividade
 import org.cidadeape.monitoraorcamento.presentation.AppViewModel
-import org.cidadeape.monitoraorcamento.presentation.grupo.ProjetoAtividadeState
 import org.jetbrains.compose.resources.imageResource
 
 @Composable

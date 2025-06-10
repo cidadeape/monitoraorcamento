@@ -18,9 +18,10 @@ import org.cidadeape.monitoraorcamento.data.IApiSof
 import org.cidadeape.monitoraorcamento.data.model.CategoriaDespesa
 import org.cidadeape.monitoraorcamento.data.model.empenhos.Empenho
 import org.cidadeape.monitoraorcamento.data.model.projetosAtividades.ProjetoAtividade
-import org.cidadeape.monitoraorcamento.presentation.grupo.GrupoState
-import org.cidadeape.monitoraorcamento.presentation.grupo.ProjetoAtividadeState
-import org.cidadeape.monitoraorcamento.presentation.grupo.TotalDespesas
+import org.cidadeape.monitoraorcamento.presentation.screen.GrupoState
+import org.cidadeape.monitoraorcamento.presentation.screen.ProjetoAtividadeState
+import org.cidadeape.monitoraorcamento.presentation.screen.TotalDespesas
+import org.cidadeape.monitoraorcamento.presentation.screen.Screen
 import kotlin.reflect.KClass
 
 class AppViewModel(

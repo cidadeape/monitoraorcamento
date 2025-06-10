@@ -1,6 +1,4 @@
-package org.cidadeape.monitoraorcamento.presentation
-
-import org.cidadeape.monitoraorcamento.presentation.grupo.GrupoState
+package org.cidadeape.monitoraorcamento.presentation.screen
 
 sealed class Screen(
     open val title: String,

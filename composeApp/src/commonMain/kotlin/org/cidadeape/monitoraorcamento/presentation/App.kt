@@ -28,12 +28,13 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.cidadeape.monitoraorcamento.common.AppColors
 import org.cidadeape.monitoraorcamento.common.OpenInNewWindow
-import org.cidadeape.monitoraorcamento.presentation.busca_projeto.BuscaProjetoScreen
-import org.cidadeape.monitoraorcamento.presentation.empenho.EmpenhoScreen
-import org.cidadeape.monitoraorcamento.presentation.grupo.GrupoScreen
-import org.cidadeape.monitoraorcamento.presentation.home.HomeScreen
-import org.cidadeape.monitoraorcamento.presentation.projeto_atividade.ProjetoAtividadeScreen
-import org.cidadeape.monitoraorcamento.presentation.projeto_atividade.ProjetoAtividadeViewModel
+import org.cidadeape.monitoraorcamento.presentation.screen.BuscaProjetoScreen
+import org.cidadeape.monitoraorcamento.presentation.screen.EmpenhoScreen
+import org.cidadeape.monitoraorcamento.presentation.screen.GrupoScreen
+import org.cidadeape.monitoraorcamento.presentation.screen.HomeScreen
+import org.cidadeape.monitoraorcamento.presentation.screen.ProjetoAtividadeScreen
+import org.cidadeape.monitoraorcamento.presentation.screen.ProjetoAtividadeViewModel
+import org.cidadeape.monitoraorcamento.presentation.screen.Screen
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)

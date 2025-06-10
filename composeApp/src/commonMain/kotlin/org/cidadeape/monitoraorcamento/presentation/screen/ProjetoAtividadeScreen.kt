@@ -1,4 +1,4 @@
-package org.cidadeape.monitoraorcamento.presentation.projeto_atividade
+package org.cidadeape.monitoraorcamento.presentation.screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
