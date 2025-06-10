@@ -349,11 +349,11 @@ class AppViewModel(
             )
         }
 
-        fun navigateToEmpenho(projetoAtividade: ProjetoAtividade, empenho: Empenho) {
+        fun navigateToEmpenho(empenho: Empenho, navigateUp: (() -> Unit)?) {
             screenState.value = Screen.Empenho(
                 empenho,
                 true,
-                { navigateToProjetoAtividade(projetoAtividade, null) }
+                navigateUp ?: ::navigateToHome
             )
         }
 

@@ -68,7 +68,7 @@ expect fun ShowMessage(message: String)
 expect fun OpenInNewWindow(url: String)
 
 @Composable
-expect fun DownloadCsv(projetoAtividade: ProjetoAtividade, listaEmpenhos: List<Empenho>)
+expect fun DownloadCsv(fileName: String, listaEmpenhos: List<Empenho>)
 
 object AppColors {
 

@@ -3,7 +3,6 @@ package org.cidadeape.monitoraorcamento.common
 import androidx.compose.runtime.Composable
 import kotlinx.browser.window
 import org.cidadeape.monitoraorcamento.data.model.empenhos.Empenho
-import org.cidadeape.monitoraorcamento.data.model.projetosAtividades.ProjetoAtividade
 import org.w3c.dom.url.URL
 import org.w3c.files.Blob
 import org.w3c.files.BlobPropertyBag
@@ -19,7 +18,7 @@ actual fun OpenInNewWindow(url: String) {
 }
 
 @Composable
-actual fun DownloadCsv(projetoAtividade: ProjetoAtividade, listaEmpenhos: List<Empenho>) {
+actual fun DownloadCsv(fileName: String, listaEmpenhos: List<Empenho>) {
     val csvDataBuilder = StringBuilder()
 
     // CSV Headers
@@ -145,8 +144,7 @@ actual fun DownloadCsv(projetoAtividade: ProjetoAtividade, listaEmpenhos: List<E
     jsArray[0] = csvDataBuilder.toString().toJsString()
     val blob = Blob(jsArray, BlobPropertyBag("text/csv"))
     val url = URL.createObjectURL(blob)
-    val fileName = "${projetoAtividade.codProjetoAtividade}_${projetoAtividade.txtDescricaoProjetoAtividade}.csv"
-    downloadFile(url, fileName)
+    downloadFile(url, "$fileName.csv")
 }
 
 fun downloadFile(url: String, fileName: String) {

@@ -1,4 +1,4 @@
-package org.cidadeape.monitoraorcamento.presentation.busca
+package org.cidadeape.monitoraorcamento.presentation.busca_projeto
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -46,7 +46,7 @@ import org.cidadeape.monitoraorcamento.presentation.grupo.ProjetoAtividadeState
 import org.jetbrains.compose.resources.imageResource
 
 @Composable
-fun BuscaScreen(
+fun BuscaProjetoScreen(
     appViewModel: AppViewModel
 ) {
     Column(
