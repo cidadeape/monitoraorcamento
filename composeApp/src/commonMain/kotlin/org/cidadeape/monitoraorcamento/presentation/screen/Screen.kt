@@ -8,9 +8,13 @@ sealed class Screen(
 
     class Home: Screen("Monitora Orçamento", false, {})
 
-    class Busca(
+    class BuscaProjeto(
         navigateUp: () -> Unit
-    ): Screen("Monitora Orçamento - Busca", true, navigateUp)
+    ): Screen("Monitora Orçamento - Busca Projetos / Atividades", true, navigateUp)
+
+    class BuscaEmpenho(
+        navigateUp: () -> Unit
+    ): Screen("Monitora Orçamento - Busca Empenhos", true, navigateUp)
 
     class Grupo(
         val grupoState: GrupoState,

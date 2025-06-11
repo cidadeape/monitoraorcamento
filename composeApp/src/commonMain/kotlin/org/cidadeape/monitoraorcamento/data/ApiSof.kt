@@ -78,7 +78,16 @@ class ApiSof: IApiSof {
         tokenTimeout = Clock.System.now().toEpochMilliseconds() + tokenResponse.expiresIn
     }
 
-    override suspend fun getEmpenhos(ano: String, mes: String, codProjetoAtividade: String): EmpenhoResponse {
+    override suspend fun getEmpenhos(
+        ano: String,
+        mes: String,
+        codProjetoAtividade: String?,
+        codOrgao: String?,
+        codFonteRecurso: String?,
+        codReferencia: String?,
+        codDestinacaoRecurso: String?,
+        codVinculacaoRecurso: String?
+    ): EmpenhoResponse {
         val response = client.get() {
             header(HttpHeaders.Authorization, "Bearer $token")
             url {
@@ -87,7 +96,12 @@ class ApiSof: IApiSof {
                 path(endpointEmpenhos)
                 parameters.append("anoEmpenho", ano)
                 parameters.append("mesEmpenho", mes)
-                parameters.append("codProjetoAtividade", codProjetoAtividade)
+                codProjetoAtividade?.let { parameters.append("codProjetoAtividade", it) }
+                codOrgao?.let { parameters.append("codOrgao", it) }
+                codFonteRecurso?.let { parameters.append("codFonteRecurso", it) }
+                codReferencia?.let { parameters.append("codReferencia", it) }
+                codDestinacaoRecurso?.let { parameters.append("codDestinacaoRecurso", it) }
+                codVinculacaoRecurso?.let { parameters.append("codVinculacaoRecurso", it) }
             }
         }
         val empenhoResponse = response.body<EmpenhoResponse>()

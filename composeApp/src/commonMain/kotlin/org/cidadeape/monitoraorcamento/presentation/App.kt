@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.cidadeape.monitoraorcamento.common.AppColors
 import org.cidadeape.monitoraorcamento.common.OpenInNewWindow
+import org.cidadeape.monitoraorcamento.presentation.screen.BuscaEmpenhoScreen
 import org.cidadeape.monitoraorcamento.presentation.screen.BuscaProjetoScreen
 import org.cidadeape.monitoraorcamento.presentation.screen.EmpenhoScreen
 import org.cidadeape.monitoraorcamento.presentation.screen.GrupoScreen
@@ -87,7 +88,8 @@ fun App(viewModel: AppViewModel = viewModel<AppViewModel>(factory = AppViewModel
 
                     when (val screen = screenState) {
                         is Screen.Home -> HomeScreen(viewModel)
-                        is Screen.Busca -> BuscaProjetoScreen(viewModel)
+                        is Screen.BuscaProjeto -> BuscaProjetoScreen(viewModel)
+                        is Screen.BuscaEmpenho -> BuscaEmpenhoScreen()
                         is Screen.Grupo -> GrupoScreen(viewModel, screen.grupoState)
                         is Screen.ProjetoAtividade -> ProjetoAtividadeScreen(
                             viewModel<ProjetoAtividadeViewModel>(

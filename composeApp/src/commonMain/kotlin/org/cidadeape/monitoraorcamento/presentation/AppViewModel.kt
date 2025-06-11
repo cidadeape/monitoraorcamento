@@ -338,8 +338,12 @@ class AppViewModel(
             screenState.value = Screen.Home()
         }
 
-        fun navigateToBusca() {
-            screenState.value = Screen.Busca(::navigateToHome)
+        fun navigateToBuscaProjeto() {
+            screenState.value = Screen.BuscaProjeto(::navigateToHome)
+        }
+
+        fun navigateToBuscaEmpenho() {
+            screenState.value = Screen.BuscaEmpenho(::navigateToHome)
         }
 
         fun navigateToProjetoAtividade(projetoAtividade: ProjetoAtividade, navigateUp: (() -> Unit)?) {

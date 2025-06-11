@@ -134,6 +134,11 @@ fun EmpenhoRow(
         }
 
         Text(
+            text = "Projeto / Atividade: ${empenho.codProjetoAtividade} - ${empenho.txDescricaoProjetoAtividade}",
+            fontSize = 12.sp
+        )
+
+        Text(
             text = "Item / Despesa: ${empenho.codItemDespesa} - ${empenho.txDescricaoItemDespesa}",
             fontSize = 12.sp
         )
@@ -144,7 +149,7 @@ fun EmpenhoRow(
         )
 
         Text(
-            text = "Grupo de despesa: ${empenho.codGrupo} - ${empenho.txDescricaoGrupoDespesa}",
+            text = "Órgão: ${empenho.codOrgao} - ${empenho.txDescricaoOrgao}",
             fontSize = 12.sp
         )
 

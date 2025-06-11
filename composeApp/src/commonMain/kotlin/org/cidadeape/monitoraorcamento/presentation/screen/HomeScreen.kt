@@ -44,11 +44,20 @@ fun HomeScreen(
 
         Text(
             modifier = Modifier.fillMaxWidth().padding(16.dp).clickable {
-                AppViewModel.navigateToBusca()
+                AppViewModel.navigateToBuscaProjeto()
             },
             color = AppColors.Purple,
             textAlign = TextAlign.Start,
             text = "> Busca customizada de Projetos e Atividades"
+        )
+
+        Text(
+            modifier = Modifier.fillMaxWidth().padding(16.dp).clickable {
+                AppViewModel.navigateToBuscaEmpenho()
+            },
+            color = AppColors.Purple,
+            textAlign = TextAlign.Start,
+            text = "> Busca customizada de Empenhos"
         )
 
         Text(

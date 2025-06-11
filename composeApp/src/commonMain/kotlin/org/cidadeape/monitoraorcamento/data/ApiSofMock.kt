@@ -14,7 +14,12 @@ class ApiSofMock: IApiSof {
     override suspend fun getEmpenhos(
         ano: String,
         mes: String,
-        codProjetoAtividade: String
+        codProjetoAtividade: String?,
+        codOrgao: String?,
+        codFonteRecurso: String?,
+        codReferencia: String?,
+        codDestinacaoRecurso: String?,
+        codVinculacaoRecurso: String?
     ): EmpenhoResponse {
         return EmpenhoResponse(
             Metadados(

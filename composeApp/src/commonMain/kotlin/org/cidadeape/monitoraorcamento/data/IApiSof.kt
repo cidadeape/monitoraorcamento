@@ -7,7 +7,16 @@ import org.cidadeape.monitoraorcamento.data.model.projetosAtividades.ProjetosAti
 
 interface IApiSof {
 
-    suspend fun getEmpenhos(ano: String, mes: String, codProjetoAtividade: String): EmpenhoResponse
+    suspend fun getEmpenhos(
+        ano: String,
+        mes: String,
+        codProjetoAtividade: String? = null,
+        codOrgao: String? = null,
+        codFonteRecurso: String? = null,
+        codReferencia: String? = null,
+        codDestinacaoRecurso: String? = null,
+        codVinculacaoRecurso: String? = null
+    ): EmpenhoResponse
 
     suspend fun getDespesas(
         ano: String,
