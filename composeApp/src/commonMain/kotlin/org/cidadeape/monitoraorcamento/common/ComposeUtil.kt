@@ -30,8 +30,9 @@ fun colorizedText(color: Color, text: String): AnnotatedString {
 }
 
 @Composable
-fun TextTitle(text: String) {
+fun TextTitle(text: String, modifier: Modifier = Modifier) {
     Text(
+        modifier = modifier,
         fontSize = 18.sp,
         fontWeight = FontWeight.Bold,
         text = text

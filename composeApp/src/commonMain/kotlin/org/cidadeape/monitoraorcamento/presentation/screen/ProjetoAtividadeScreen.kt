@@ -43,7 +43,7 @@ fun ProjetoAtividadeScreen(
             )
         }
 
-        Column (modifier = Modifier.padding(24.dp, 0.dp, 8.dp, 0.dp)) {
+        Column (modifier = Modifier.padding(16.dp, 0.dp, 16.dp, 0.dp)) {
             ListaEmpenhos(
                 viewModel.projetoAtividadeState.stateTotalEmpenhado,
                 viewModel.projetoAtividadeState.stateListaEmpenhos,
@@ -51,10 +51,4 @@ fun ProjetoAtividadeScreen(
             )
         }
     }
-}
-
-
-@Composable
-fun CellRow(value: String?, fontSize: TextUnit = 14.sp, fontWeight: FontWeight = FontWeight.Normal) {
-    Text(text = value?: "null", fontSize = fontSize, fontWeight = fontWeight)
 }

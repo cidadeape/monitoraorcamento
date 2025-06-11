@@ -40,68 +40,93 @@ fun ListaEmpenhos(
     onNavigateBackFromEmpenho: () -> Unit
 ) {
 
-    val totalEmpenhosState = stateTotalEmpenhado.collectAsState()
-    val listaEmpenhosState = stateListaEmpenhos.collectAsState()
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
 
-    Text(
-        modifier = Modifier.fillMaxWidth().padding(0.dp, 0.dp, 0.dp, 4.dp),
-        textAlign = TextAlign.Start,
-        text = "Total empenhado líquido em 2025:"
-    )
+        val totalEmpenhosState = stateTotalEmpenhado.collectAsState()
+        val listaEmpenhosState = stateListaEmpenhos.collectAsState()
 
-    when (val state = totalEmpenhosState.value) {
-        is LoadingState.Failure -> Text(state.message)
-        is LoadingState.Success -> {
-            Text(
-                modifier = Modifier.fillMaxWidth().padding(0.dp, 0.dp, 0.dp, 16.dp),
-                textAlign = TextAlign.Start,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                text = state.response
-            )
-        }
-        else -> {}
-    }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            when (val state = totalEmpenhosState.value) {
+                is LoadingState.Failure -> Text(state.message)
+                is LoadingState.Success -> {
 
-    when (val state = listaEmpenhosState.value) {
-        is LoadingState.Failure -> Text(state.message)
-        is LoadingState.Success -> {
-            if(state.response.isEmpty()) {
-                Text("Nenhum empenho realizado")
-            } else {
+                    Text(
+                        modifier = Modifier.padding(16.dp, 0.dp, 0.dp, 0.dp),
+                        textAlign = TextAlign.Start,
+                        text = "Total empenhado líquido em 2025:"
+                    )
 
-                var downloadCsv by remember { mutableStateOf(false) }
-                Button(
-                    modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 16.dp),
-                    onClick = {
-                        downloadCsv = true
+                    Text(
+                        modifier = Modifier.padding(8.dp, 0.dp, 0.dp, 0.dp),
+                        textAlign = TextAlign.Start,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        text = state.response
+                    )
+                }
+
+                else -> {}
+            }
+
+            when (val state = listaEmpenhosState.value) {
+                is LoadingState.Success -> {
+                    if (state.response.isNotEmpty()) {
+
+                        Spacer(modifier = Modifier.weight(1f))
+                        var downloadCsv by remember { mutableStateOf(false) }
+                        Button(
+                            modifier = Modifier.padding(16.dp),
+                            onClick = {
+                                downloadCsv = true
+                            }
+                        ) {
+                            Text("Baixar lista de empenhos")
+                        }
+                        if (downloadCsv) {
+                            DownloadCsv("empenhos", state.response)
+                            downloadCsv = false
+                        }
                     }
-                ) {
-                    Text("Baixar lista de empenhos")
-                }
-                if (downloadCsv) {
-                    DownloadCsv("empenhos", state.response)
-                    downloadCsv = false
                 }
 
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .verticalScroll(rememberScrollState()),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    for (empenho in state.response) {
-                        EmpenhoRow(empenho, onNavigateBackFromEmpenho)
-                        Spacer(modifier = Modifier.fillMaxWidth().padding(0.dp, 8.dp, 0.dp, 8.dp).height(1.dp).background(
-                            AppColors.SuperLightGray))
+                else -> {}
+            }
+        }
+
+        when (val state = listaEmpenhosState.value) {
+            is LoadingState.Failure -> Text(state.message)
+            is LoadingState.Success -> {
+                if(state.response.isEmpty()) {
+                    Text("Nenhum empenho realizado")
+                } else {
+
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .verticalScroll(rememberScrollState()),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        for (empenho in state.response) {
+                            EmpenhoRow(empenho, onNavigateBackFromEmpenho)
+                            Spacer(modifier = Modifier
+                                .fillMaxWidth()
+                                .height(1.dp)
+                                .background(AppColors.SuperLightGray)
+                            )
+                        }
                     }
                 }
             }
+            is LoadingState.Loading -> Text("Carregando")
+            is LoadingState.NotStarted -> {}
         }
-        is LoadingState.Loading -> Text("Carregando")
-        is LoadingState.NotStarted -> {}
-    }
 
+    }
 }
 
 @Composable
@@ -115,6 +140,7 @@ fun EmpenhoRow(
             .clickable {
                 AppViewModel.navigateToEmpenho(empenho, onNavigateUpFromEmpenho)
             }
+            .padding(16.dp)
     ) {
         Row (
             modifier = Modifier.fillMaxWidth(),

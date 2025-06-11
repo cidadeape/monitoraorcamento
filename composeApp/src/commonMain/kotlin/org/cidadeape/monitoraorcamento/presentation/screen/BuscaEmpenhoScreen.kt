@@ -29,22 +29,26 @@ fun BuscaEmpenhoScreen(
 ) {
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(24.dp),
+        modifier = Modifier.fillMaxSize().padding(0.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        TextTitle(text = "Busca de empenhos")
-
-        var textCodOrgao by remember { mutableStateOf("") }
-        var textCodFonteRecursos by remember { mutableStateOf("") }
+        TextTitle(
+            text = "Busca de empenhos",
+            modifier = Modifier.padding(16.dp)
+        )
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
         ) {
 
+            var textCodOrgao by remember { mutableStateOf("") }
+            var textCodFonteRecursos by remember { mutableStateOf("") }
+
             TextField(
-                modifier = Modifier.fillMaxWidth(.3f).padding(0.dp, 16.dp, 0.dp, 16.dp),
+                modifier = Modifier.fillMaxWidth(.33f,).padding(0.dp, 16.dp, 0.dp, 16.dp),
                 value = textCodOrgao,
                 onValueChange = { newValue ->
                     textCodOrgao = newValue
@@ -59,7 +63,7 @@ fun BuscaEmpenhoScreen(
             )
 
             TextField(
-                modifier = Modifier.fillMaxWidth(.45f).padding(0.dp, 16.dp, 0.dp, 16.dp),
+                modifier = Modifier.fillMaxWidth(.5f).padding(0.dp, 16.dp, 0.dp, 16.dp),
                 value = textCodFonteRecursos,
                 onValueChange = { newValue ->
                     textCodFonteRecursos = newValue
@@ -72,20 +76,26 @@ fun BuscaEmpenhoScreen(
                     unfocusedIndicatorColor = Color.Transparent,
                 )
             )
-        }
 
-        Button(
-            onClick = {
-                viewModel.buscarEmpenhos(textCodOrgao, textCodFonteRecursos)
+            Button(
+                modifier = Modifier,
+                onClick = {
+                    viewModel.buscarEmpenhos(textCodOrgao, textCodFonteRecursos)
+                }
+            ) {
+                Text("Buscar")
             }
-        ) {
-            Text("Buscar")
         }
 
-        Column (modifier = Modifier.padding(24.dp, 0.dp, 8.dp, 0.dp)) {
+        Column (modifier = Modifier.padding(16.dp, 0.dp, 16.dp, 0.dp)) {
             ListaEmpenhos(viewModel.stateTotalEmpenhado, viewModel.stateListaEmpenhos) {
                 AppViewModel.navigateToHome()
             }
         }
     }
+}
+
+@Composable
+fun CamposBusca() {
+
 }
