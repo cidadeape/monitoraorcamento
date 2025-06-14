@@ -20,14 +20,20 @@ import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.cidadeape.monitoraorcamento.common.AppColors
 import org.cidadeape.monitoraorcamento.common.OpenInNewWindow
+import org.cidadeape.monitoraorcamento.common.colorizedText
 import org.cidadeape.monitoraorcamento.presentation.screen.BuscaEmpenhoScreen
 import org.cidadeape.monitoraorcamento.presentation.screen.BuscaProjetoScreen
 import org.cidadeape.monitoraorcamento.presentation.screen.EmpenhoScreen
@@ -83,8 +89,24 @@ fun App(viewModel: AppViewModel = viewModel<AppViewModel>(factory = AppViewModel
             },
         ) { innerPadding ->
 
-            Column {
-                Box(modifier = Modifier.weight(1f).padding(innerPadding)) {
+            Column(
+                modifier = Modifier.padding(innerPadding)
+            ) {
+                Box(modifier = Modifier.wrapContentHeight()) {
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(color = AppColors.SuperLightRed)
+                            .padding(16.dp, 2.dp, 16.dp, 4.dp),
+                        textAlign = TextAlign.Center,
+                        fontStyle = FontStyle.Italic,
+                        fontSize = 14.sp,
+                        color = Color.Red,
+                        text = "Ferramenta em fase de teste"
+                    )
+                }
+
+                Box(modifier = Modifier.weight(1f)) {
 
                     when (val screen = screenState) {
                         is Screen.Home -> HomeScreen(viewModel)
@@ -110,23 +132,26 @@ fun App(viewModel: AppViewModel = viewModel<AppViewModel>(factory = AppViewModel
 
 @Composable
 fun Footer() {
-    var openApiSof by remember { mutableStateOf(false) }
 
     Text(
         modifier = Modifier
             .fillMaxWidth()
             .background(color = AppColors.SuperLightGray)
-            .clickable { openApiSof = true }
             .padding(16.dp, 8.dp, 16.dp, 16.dp),
         textAlign = TextAlign.Center,
         fontStyle = FontStyle.Italic,
         fontSize = 14.sp,
         color = AppColors.DarkGray,
-        text = "Dados em tempo real da API-SOF - Sistema de Execução Orçamentária da Prefeitura de São Paulo"
-    )
+        text = buildAnnotatedString {
 
-    if (openApiSof) {
-        OpenInNewWindow("https://capital.sp.gov.br/web/fazenda/contaspublicas/apisof")
-        openApiSof = false
-    }
+            append("Criado pela ")
+            withLink(LinkAnnotation.Url(url = "https://www.cidadeape.org")) {
+                append(colorizedText(AppColors.Purple, "Cidadeapé - cidadeape.org"))
+            }
+            append(" | Dados em tempo real da ")
+            withLink(LinkAnnotation.Url(url = "https://capital.sp.gov.br/web/fazenda/contaspublicas/apisof")) {
+                append("API-SOF - Prefeitura de São Paulo")
+            }
+        }
+    )
 }

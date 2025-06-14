@@ -75,6 +75,8 @@ object AppColors {
 
     val SuperLightGray = Color(0xFFDDDDDD)
 
+    val SuperLightRed = Color(0xFFFFDDDD)
+
     val DarkGray = Color(0xFF333333)
 
     val Purple = Color(0xFF6200EE)

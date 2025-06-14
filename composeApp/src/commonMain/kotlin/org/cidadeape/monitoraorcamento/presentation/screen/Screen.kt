@@ -6,7 +6,7 @@ sealed class Screen(
     val navigateUp: () -> Unit
 ) {
 
-    class Home: Screen("Monitora Orçamento", false, {})
+    class Home: Screen("Monitoramento do Orçamento Municipal de SP de 2025", false, {})
 
     class BuscaProjeto(
         navigateUp: () -> Unit
