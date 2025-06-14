@@ -72,31 +72,31 @@ fun ListaEmpenhos(
 
                 else -> {}
             }
+        }
 
-            when (val state = listaEmpenhosState.value) {
-                is LoadingState.Success -> {
-                    if (state.response.isNotEmpty()) {
+        when (val state = listaEmpenhosState.value) {
+            is LoadingState.Success -> {
+                if (state.response.isNotEmpty()) {
 
-                        Spacer(modifier = Modifier.weight(1f))
-                        var downloadCsv by remember { mutableStateOf(false) }
-                        Button(
-                            modifier = Modifier.padding(16.dp),
-                            onClick = {
-                                downloadCsv = true
-                            }
-                        ) {
-                            Text("Baixar lista de empenhos")
+                    var downloadCsv by remember { mutableStateOf(false) }
+                    Button(
+                        modifier = Modifier.padding(16.dp),
+                        onClick = {
+                            downloadCsv = true
                         }
-                        if (downloadCsv) {
-                            DownloadCsv("empenhos", state.response)
-                            downloadCsv = false
-                        }
+                    ) {
+                        Text("Baixar lista de empenhos")
+                    }
+                    if (downloadCsv) {
+                        DownloadCsv("empenhos", state.response)
+                        downloadCsv = false
                     }
                 }
-
-                else -> {}
             }
+
+            else -> {}
         }
+
 
         when (val state = listaEmpenhosState.value) {
             is LoadingState.Failure -> Text(state.message)
