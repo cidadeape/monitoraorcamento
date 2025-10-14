@@ -121,7 +121,7 @@ fun GrupoRow(
 
                     is LoadingState.Success ->
                         colorizedText(
-                            text = Util.formatToCurrency(state.response),
+                            text = "Pago: ${Util.formatToCurrency(state.response)}",
                             color = Color.Black
                         )
 

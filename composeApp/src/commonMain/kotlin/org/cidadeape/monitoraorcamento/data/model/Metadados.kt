@@ -5,6 +5,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Metadados(
     val txtMensagemErro: String,
-    val qtdPaginas: Int?,
+    val qtdPaginas: Int,
     val txtStatus: String?,
 )

@@ -235,7 +235,7 @@ class AppViewModel(
         fullList.value = LoadingState.Loading()
         fullList.value =
             try {
-                val projetosAtividades = sofApi.getProjetoAtividade("2025", null).lstProjetosAtividades
+                val projetosAtividades = sofApi.getProjetoAtividade(codProjetoAtividade = null).lstProjetosAtividades
                 LoadingState.Success(projetosAtividades)
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -255,7 +255,7 @@ class AppViewModel(
         projetoAtividadeState.stateProjeto.value = try {
             LoadingState.Loading<String>()
             val nome = sofApi
-                .getProjetoAtividade("2025", projetoAtividadeState.codigo)
+                .getProjetoAtividade(codProjetoAtividade = projetoAtividadeState.codigo)
                 .lstProjetosAtividades[0]
             LoadingState.Success(nome)
         } catch (e: Exception) {
@@ -270,7 +270,7 @@ class AppViewModel(
             projetoAtividadeState.stateDespesasTotal.value = LoadingState.Loading()
 
             val despesasResponse = sofApi
-                .getDespesas("2025", "12", projetoAtividadeState.codigo)
+                .getDespesas(codProjetoAtividade = projetoAtividadeState.codigo)
 
             val totalDespesas =
                 if (despesasResponse.metaDados.txtStatus == "SEM REGISTROS") {
@@ -293,8 +293,10 @@ class AppViewModel(
 
         try {
             projetoAtividadeState.stateDespesasCapital.value = LoadingState.Loading()
-            val despesasResponse = sofApi
-                .getDespesas("2025", "12", projetoAtividadeState.codigo, CategoriaDespesa.DESPESAS_CAPITAL)
+            val despesasResponse = sofApi.getDespesas(
+                codProjetoAtividade = projetoAtividadeState.codigo,
+                categoriaDespesa = CategoriaDespesa.DESPESAS_CAPITAL
+            )
 
             val totalDespesas =
                 if (despesasResponse.metaDados.txtStatus == "SEM REGISTROS") {

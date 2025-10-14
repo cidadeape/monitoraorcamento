@@ -34,13 +34,11 @@ class BuscaEmpenhoScreenVM(
 
         try {
             val empenhos = apiSof.getEmpenhos(
-                "2025",
-                "12",
                 codOrgao = codOrgao,
                 codFonteRecurso = codFonte,
                 codReferencia = codReferencia,
                 codDestinacaoRecurso = codDestinacaoRecurso,
-                codVinculacaoRecurso = codVinculacaoRecurso).lstEmpenhos
+                codVinculacaoRecurso = codVinculacaoRecurso)
             stateListaEmpenhos.value = LoadingState.Success(empenhos)
 
             val totalEmpenhado = empenhos.sumOf { it.valEmpenhadoLiquido }

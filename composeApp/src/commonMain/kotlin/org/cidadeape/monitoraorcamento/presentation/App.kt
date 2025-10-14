@@ -1,7 +1,6 @@
 package org.cidadeape.monitoraorcamento.presentation
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,18 +20,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.LinkAnnotation
-import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.cidadeape.monitoraorcamento.common.AppColors
-import org.cidadeape.monitoraorcamento.common.OpenInNewWindow
 import org.cidadeape.monitoraorcamento.common.colorizedText
 import org.cidadeape.monitoraorcamento.presentation.screen.BuscaEmpenhoScreen
 import org.cidadeape.monitoraorcamento.presentation.screen.BuscaProjetoScreen

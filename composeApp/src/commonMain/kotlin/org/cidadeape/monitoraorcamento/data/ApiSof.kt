@@ -23,8 +23,12 @@ import org.cidadeape.monitoraorcamento.data.model.empenhos.EmpenhoResponse
 import org.cidadeape.monitoraorcamento.data.model.projetosAtividades.ProjetosAtividadesResponse
 import org.cidadeape.monitoraorcamento.data.model.TokenResponse
 import org.cidadeape.monitoraorcamento.data.model.despesa.DespesaResponse
+import org.cidadeape.monitoraorcamento.data.model.empenhos.Empenho
 
 class ApiSof: IApiSof {
+
+    override var anoDefault: String = "2025"
+    override var mesDefault: String = "12"
 
     private val https_protocol = URLProtocol.HTTPS
     private val baseUrl = "gateway.apilib.prefeitura.sp.gov.br/sf/sof/v4"
@@ -86,7 +90,39 @@ class ApiSof: IApiSof {
         codFonteRecurso: String?,
         codReferencia: String?,
         codDestinacaoRecurso: String?,
-        codVinculacaoRecurso: String?
+        codVinculacaoRecurso: String?,
+    ): List<Empenho>  {
+        val response = ArrayList<Empenho>()
+        var pagina = 1
+        do {
+            val empenhoResponse = getEmpenhos(
+                ano,
+                mes,
+                codProjetoAtividade,
+                codOrgao,
+                codFonteRecurso,
+                codReferencia,
+                codDestinacaoRecurso,
+                codVinculacaoRecurso,
+                pagina
+            )
+            response.addAll(empenhoResponse.lstEmpenhos)
+            pagina++
+        } while (empenhoResponse.metaDados.qtdPaginas >= pagina)
+
+        return response
+    }
+
+    private suspend fun getEmpenhos(
+        ano: String,
+        mes: String,
+        codProjetoAtividade: String?,
+        codOrgao: String?,
+        codFonteRecurso: String?,
+        codReferencia: String?,
+        codDestinacaoRecurso: String?,
+        codVinculacaoRecurso: String?,
+        pagina: Int
     ): EmpenhoResponse {
         val response = client.get() {
             header(HttpHeaders.Authorization, "Bearer $token")
@@ -96,6 +132,7 @@ class ApiSof: IApiSof {
                 path(endpointEmpenhos)
                 parameters.append("anoEmpenho", ano)
                 parameters.append("mesEmpenho", mes)
+                parameters.append("numPagina", pagina.toString())
                 codProjetoAtividade?.let { parameters.append("codProjetoAtividade", it) }
                 codOrgao?.let { parameters.append("codOrgao", it) }
                 codFonteRecurso?.let { parameters.append("codFonteRecurso", it) }
