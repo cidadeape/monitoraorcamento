@@ -35,6 +35,13 @@ class AppViewModel(
             ProjetoAtividadeState("2340")
         ))
 
+    private val grupoObrasViarias = GrupoState(
+        nome = "Obras Viárias",
+        listaProjetosAtividades = listOf(
+            ProjetoAtividadeState("5100"),
+            ProjetoAtividadeState("5105")
+        ))
+
     private val grupoCalcadas = GrupoState(
         nome = "Calçadas",
         listaProjetosAtividades = listOf(
@@ -53,7 +60,10 @@ class AppViewModel(
     private val grupoSegurancaViaria = GrupoState(
         nome = "Segurança Viária",
         listaProjetosAtividades = listOf(
-            ProjetoAtividadeState("3757")
+            ProjetoAtividadeState("3757"),
+            ProjetoAtividadeState("3664"),
+            ProjetoAtividadeState("4656"),
+            ProjetoAtividadeState("4703")
         ))
 
     private val grupoOnibusCorredores = GrupoState(
@@ -97,17 +107,24 @@ class AppViewModel(
             ProjetoAtividadeState("1702"),
             ProjetoAtividadeState("1703"),
             ProjetoAtividadeState("1704"),
+            ProjetoAtividadeState("1705"),
+            ProjetoAtividadeState("1706"),
             ProjetoAtividadeState("2324"),
             ProjetoAtividadeState("2386"),
             ProjetoAtividadeState("2702"),
             ProjetoAtividadeState("2703"),
             ProjetoAtividadeState("2704"),
             ProjetoAtividadeState("2705"),
+            ProjetoAtividadeState("3355"),
             ProjetoAtividadeState("5087"),
+            ProjetoAtividadeState("6007"),
+            ProjetoAtividadeState("6009"),
+            ProjetoAtividadeState("6010"),
             ProjetoAtividadeState("6651"),
             ProjetoAtividadeState("6655"),
             ProjetoAtividadeState("6659"),
             ProjetoAtividadeState("6660"),
+            ProjetoAtividadeState("6663"),
             ProjetoAtividadeState("6669"),
             ProjetoAtividadeState("6681"),
             ProjetoAtividadeState("6682"),
@@ -118,9 +135,10 @@ class AppViewModel(
 
     val listaGrupos = listOf(
         grupoAsfalto,
+        grupoObrasViarias,
         grupoCalcadas,
-        grupoBicicleta,
         grupoSegurancaViaria,
+        grupoBicicleta,
         grupoOnibusCorredores,
         grupoOnibusTerminais,
         grupoOnibusFrota,
@@ -288,7 +306,7 @@ class AppViewModel(
             projetoAtividadeState.stateDespesasTotal.value = LoadingState.Success(totalDespesas)
         } catch (e: Exception) {
             e.printStackTrace()
-            projetoAtividadeState.stateDespesasTotal.value = LoadingState.Failure("Erro ao carregar empenhos: ${e::class.simpleName}")
+            projetoAtividadeState.stateDespesasTotal.value = LoadingState.Failure("Erro ao carregar despesas: ${e::class.simpleName}")
         }
 
         try {
@@ -314,7 +332,7 @@ class AppViewModel(
             projetoAtividadeState.stateDespesasCapital.value = LoadingState.Success(totalDespesas)
         } catch (e: Exception) {
             e.printStackTrace()
-            projetoAtividadeState.stateDespesasCapital.value = LoadingState.Failure("Erro ao carregar empenhos: ${e::class.simpleName}")
+            projetoAtividadeState.stateDespesasCapital.value = LoadingState.Failure("Erro ao carregar despesas: ${e::class.simpleName}")
         }
     }
 
