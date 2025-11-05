@@ -42,23 +42,23 @@ fun HomeScreen(
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())
     ) {
 
-        Text(
-            modifier = Modifier.fillMaxWidth().padding(16.dp).clickable {
-                AppViewModel.navigateToBuscaProjeto()
-            },
-            color = AppColors.Purple,
-            textAlign = TextAlign.Start,
-            text = "> Busca customizada de Projetos e Atividades"
-        )
-
-        Text(
-            modifier = Modifier.fillMaxWidth().padding(16.dp).clickable {
-                AppViewModel.navigateToBuscaEmpenho()
-            },
-            color = AppColors.Purple,
-            textAlign = TextAlign.Start,
-            text = "> Busca customizada de Empenhos"
-        )
+//        Text(
+//            modifier = Modifier.fillMaxWidth().padding(16.dp).clickable {
+//                AppViewModel.navigateToBuscaProjeto()
+//            },
+//            color = AppColors.Purple,
+//            textAlign = TextAlign.Start,
+//            text = "> Busca customizada de Projetos e Atividades"
+//        )
+//
+//        Text(
+//            modifier = Modifier.fillMaxWidth().padding(16.dp).clickable {
+//                AppViewModel.navigateToBuscaEmpenho()
+//            },
+//            color = AppColors.Purple,
+//            textAlign = TextAlign.Start,
+//            text = "> Busca customizada de Empenhos"
+//        )
 
         Text(
             modifier = Modifier.fillMaxWidth().padding(16.dp, 16.dp, 16.dp, 4.dp),
