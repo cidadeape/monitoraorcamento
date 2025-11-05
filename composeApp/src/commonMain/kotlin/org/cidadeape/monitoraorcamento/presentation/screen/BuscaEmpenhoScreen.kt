@@ -80,7 +80,12 @@ fun BuscaEmpenhoScreen(
             Button(
                 modifier = Modifier,
                 onClick = {
-                    viewModel.buscarEmpenhos(textCodOrgao, textCodFonteRecursos)
+                    try {
+                        val codOrgao = textCodOrgao.toInt()
+                        viewModel.buscarEmpenhos(codOrgao, textCodFonteRecursos)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
                 }
             ) {
                 Text("Buscar")

@@ -21,7 +21,7 @@ class BuscaEmpenhoScreenVM(
     var stateListaEmpenhos: MutableStateFlow<LoadingState<List<Empenho>>> =
         MutableStateFlow(LoadingState.NotStarted())
 
-    fun buscarEmpenhos(codOrgao: String, codFonteRecursos: String) = viewModelScope.launch(Dispatchers.Default) {
+    fun buscarEmpenhos(codOrgao: Int, codFonteRecursos: String) = viewModelScope.launch(Dispatchers.Default) {
 
         stateTotalEmpenhado.value = LoadingState.Loading()
         stateListaEmpenhos.value = LoadingState.Loading()
