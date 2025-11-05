@@ -14,7 +14,7 @@ interface IApiSof {
         ano: String = anoDefault,
         mes: String = mesDefault,
         codProjetoAtividade: String? = null,
-        codOrgao: String? = null,
+        codOrgao: Int? = null,
         codFonteRecurso: String? = null,
         codReferencia: String? = null,
         codDestinacaoRecurso: String? = null,
@@ -24,7 +24,8 @@ interface IApiSof {
     suspend fun getDespesas(
         ano: String = anoDefault,
         mes: String = mesDefault,
-        codProjetoAtividade: String,
+        codProjetoAtividade: String? = null,
+        codOrgao: Int? = null,
         categoriaDespesa: CategoriaDespesa? = null
     ): DespesaResponse
 

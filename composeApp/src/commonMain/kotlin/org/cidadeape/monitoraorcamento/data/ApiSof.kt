@@ -86,7 +86,7 @@ class ApiSof: IApiSof {
         ano: String,
         mes: String,
         codProjetoAtividade: String?,
-        codOrgao: String?,
+        codOrgao: Int?,
         codFonteRecurso: String?,
         codReferencia: String?,
         codDestinacaoRecurso: String?,
@@ -99,7 +99,7 @@ class ApiSof: IApiSof {
                 ano,
                 mes,
                 codProjetoAtividade,
-                codOrgao,
+                codOrgao.toString(),
                 codFonteRecurso,
                 codReferencia,
                 codDestinacaoRecurso,
@@ -149,7 +149,8 @@ class ApiSof: IApiSof {
     override suspend fun getDespesas(
         ano: String,
         mes: String,
-        codProjetoAtividade: String,
+        codProjetoAtividade: String?,
+        codOrgao: Int?,
         categoriaDespesa: CategoriaDespesa?
     ): DespesaResponse {
         val response = client.get() {
@@ -160,7 +161,12 @@ class ApiSof: IApiSof {
                 path(endpointDespesas)
                 parameters.append("anoDotacao", ano)
                 parameters.append("mesDotacao", mes)
-                parameters.append("codProjetoAtividade", codProjetoAtividade)
+                codProjetoAtividade?.let {
+                    parameters.append("codProjetoAtividade", it)
+                }
+                codOrgao?.let {
+                    parameters.append("codOrgao", it.toString())
+                }
                 categoriaDespesa?.let {
                     parameters.append("codCategoria", it.codigo)
                 }
