@@ -4,6 +4,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import org.cidadeape.monitoraorcamento.common.LoadingState
 import kotlinx.coroutines.flow.MutableStateFlow
+import org.cidadeape.monitoraorcamento.data.model.despesa.DespesaResponse
 import org.cidadeape.monitoraorcamento.data.model.projetosAtividades.ProjetoAtividade
 
 data class GrupoState (
@@ -27,4 +28,21 @@ data class TotalDespesas(
     var orcadoAtualizado: Double,
     var empenhadoLiquido: Double,
     var pago: Double
-)
+) {
+    companion object {
+        fun fromDespesasResponse(despesasResponse: DespesaResponse): TotalDespesas {
+
+            return if (despesasResponse.metaDados.txtStatus == "SEM REGISTROS") {
+                TotalDespesas(0.0, 0.0, 0.0, 0.0)
+            } else {
+                val despesas = despesasResponse.lstDespesas[0]
+                TotalDespesas(
+                    empenhadoLiquido = despesas.valEmpenhadoLiquido,
+                    pago = despesas.valPagoRestos + despesas.valPagoExercicio,
+                    orcadoInicial = despesas.valOrcadoInicial,
+                    orcadoAtualizado = despesas.valOrcadoAtualizado
+                )
+            }
+        }
+    }
+}
