@@ -8,25 +8,20 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.LinkAnnotation
-import androidx.compose.ui.text.ParagraphStyle
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.withLink
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import kotlinx.datetime.LocalDate
 import org.cidadeape.monitoraorcamento.common.AppColors
 import org.cidadeape.monitoraorcamento.common.LoadingState
 import org.cidadeape.monitoraorcamento.common.TextTitle
 import org.cidadeape.monitoraorcamento.common.Util
-import org.cidadeape.monitoraorcamento.common.colorizedText
 import org.cidadeape.monitoraorcamento.data.model.empenhos.Empenho
 import org.cidadeape.monitoraorcamento.domain.model.TotalDespesas
 import org.cidadeape.monitoraorcamento.presentation.AppViewModel
@@ -40,7 +35,8 @@ fun FundurbScreen(
     fundurbViewModel.initialize()
 
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         TextTitle(
@@ -87,9 +83,9 @@ private fun CabecalhoFundurb(
     stateEmpenhoList: State<LoadingState<List<Empenho>>>
 ) {
     Column(
-        modifier = Modifier.padding(16.dp)
+        modifier = Modifier.padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
 
         when (val state = stateTotalDespesas.value) {
             is LoadingState.NotStarted -> {}
@@ -119,7 +115,7 @@ private fun TotaisFundurb(
     totalDespesas: TotalDespesas
 ) {
     Text(
-        modifier = Modifier.fillMaxWidth().padding(0.dp, 0.dp, 0.dp, 8.dp),
+        modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 8.dp),
         textAlign = TextAlign.Start,
         color = AppColors.DarkGray,
         text = buildAnnotatedString {
@@ -135,14 +131,14 @@ private fun TotaisFundurb(
     )
 
     Text(
-        modifier = Modifier.fillMaxWidth().padding(0.dp, 0.dp, 0.dp, 8.dp),
+        modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 8.dp),
         textAlign = TextAlign.Start,
         color = AppColors.DarkGray,
         text = "Empenhado (líquido): ${Util.formatToCurrency(totalDespesas.empenhadoLiquido)}"
     )
 
     Text(
-        modifier = Modifier.fillMaxWidth().padding(0.dp, 0.dp, 0.dp, 8.dp),
+        modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 8.dp),
         textAlign = TextAlign.Start,
         fontWeight = FontWeight.Bold,
         color = AppColors.MediumBlue,

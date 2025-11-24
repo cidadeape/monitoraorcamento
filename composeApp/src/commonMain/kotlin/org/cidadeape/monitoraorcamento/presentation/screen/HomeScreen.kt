@@ -163,19 +163,19 @@ fun GrupoRow(
 
         }
 
-        Column(modifier = Modifier
-            .wrapContentWidth()
-            .align(Alignment.CenterVertically)
-        ) {
-
-            Image(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .size(24.dp)
-                    .clickable { appViewModel.loadGrupo(grupoState) },
-                bitmap = imageResource(Res.drawable.refresh_24dp),
-                contentDescription = "Atualizar"
-            )
-        }
+//        Column(modifier = Modifier
+//            .wrapContentWidth()
+//            .align(Alignment.CenterVertically)
+//        ) {
+//
+//            Image(
+//                modifier = Modifier
+//                    .padding(8.dp)
+//                    .size(24.dp)
+//                    .clickable { appViewModel.loadGrupo(grupoState) },
+//                bitmap = imageResource(Res.drawable.refresh_24dp),
+//                contentDescription = "Atualizar"
+//            )
+//        }
     }
 }
