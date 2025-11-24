@@ -209,11 +209,11 @@ fun AutocompleteTextView(
 @Composable
 fun ProjetoAtividadeRow(
     appViewModel: AppViewModel,
-    projetoAtividadeState: ProjetoAtividadeState
+    projetoAtividadeRowState: ProjetoAtividadeRowState
 ) {
 
-    val projetoState = projetoAtividadeState.stateProjeto.collectAsState()
-    val totalEmpenhadoState = projetoAtividadeState.stateDespesasTotal.collectAsState()
+    val projetoState = projetoAtividadeRowState.stateProjeto.collectAsState()
+    val totalEmpenhadoState = projetoAtividadeRowState.stateTotalDespesas.collectAsState()
 
     Row(
         modifier = Modifier.fillMaxWidth()
@@ -246,7 +246,7 @@ fun ProjetoAtividadeRow(
 
             Text (
                 fontSize = 12.sp,
-                text = "Codigo: ${projetoAtividadeState.codigo}"
+                text = "Codigo: ${projetoAtividadeRowState.codigo}"
             )
 
             Text(
@@ -277,7 +277,7 @@ fun ProjetoAtividadeRow(
                 modifier = Modifier
                     .padding(8.dp)
                     .size(24.dp)
-                    .clickable { appViewModel.removerDaListaCustomizada(projetoAtividadeState) },
+                    .clickable { appViewModel.removerDaListaCustomizada(projetoAtividadeRowState) },
                 bitmap = imageResource(Res.drawable.close_24dp),
                 contentDescription = "Remover"
             )

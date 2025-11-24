@@ -15,12 +15,11 @@ import kotlinx.coroutines.launch
 import org.cidadeape.monitoraorcamento.common.LoadingState
 import org.cidadeape.monitoraorcamento.data.ApiSof
 import org.cidadeape.monitoraorcamento.data.IApiSof
-import org.cidadeape.monitoraorcamento.data.model.CategoriaDespesa
 import org.cidadeape.monitoraorcamento.data.model.empenhos.Empenho
 import org.cidadeape.monitoraorcamento.data.model.projetosAtividades.ProjetoAtividade
+import org.cidadeape.monitoraorcamento.domain.model.TotalDespesas
 import org.cidadeape.monitoraorcamento.presentation.screen.GrupoState
-import org.cidadeape.monitoraorcamento.presentation.screen.ProjetoAtividadeState
-import org.cidadeape.monitoraorcamento.presentation.screen.TotalDespesas
+import org.cidadeape.monitoraorcamento.presentation.screen.ProjetoAtividadeRowState
 import org.cidadeape.monitoraorcamento.presentation.screen.Screen
 import kotlin.reflect.KClass
 
@@ -31,66 +30,66 @@ class AppViewModel(
     private val grupoAsfalto = GrupoState(
         nome = "Asfalto",
         listaProjetosAtividades = listOf(
-            ProjetoAtividadeState("1137"),
-            ProjetoAtividadeState("2340")
+            ProjetoAtividadeRowState("1137"),
+            ProjetoAtividadeRowState("2340")
         ))
 
     private val grupoObrasViarias = GrupoState(
         nome = "Obras Viárias",
         listaProjetosAtividades = listOf(
-            ProjetoAtividadeState("5100"),
-            ProjetoAtividadeState("5105")
+            ProjetoAtividadeRowState("5100"),
+            ProjetoAtividadeRowState("5105")
         ))
 
     private val grupoCalcadas = GrupoState(
         nome = "Calçadas",
         listaProjetosAtividades = listOf(
-            ProjetoAtividadeState("1169")
+            ProjetoAtividadeRowState("1169")
         ))
 
     private val grupoBicicleta = GrupoState(
         nome = "Ciclovias e Ciclofaixas",
         listaProjetosAtividades = listOf(
-            ProjetoAtividadeState("1097"),
-            ProjetoAtividadeState("1098"),
-            ProjetoAtividadeState("2093"),
-            ProjetoAtividadeState("2098")
+            ProjetoAtividadeRowState("1097"),
+            ProjetoAtividadeRowState("1098"),
+            ProjetoAtividadeRowState("2093"),
+            ProjetoAtividadeRowState("2098")
         ))
 
     private val grupoSegurancaViaria = GrupoState(
         nome = "Segurança Viária",
         listaProjetosAtividades = listOf(
-            ProjetoAtividadeState("3757"),
-            ProjetoAtividadeState("3664"),
-            ProjetoAtividadeState("4656"),
-            ProjetoAtividadeState("4703")
+            ProjetoAtividadeRowState("3757"),
+            ProjetoAtividadeRowState("3664"),
+            ProjetoAtividadeRowState("4656"),
+            ProjetoAtividadeRowState("4703")
         ))
 
     private val grupoOnibusCorredores = GrupoState(
         nome = "Ônibus - Corredores e Faixas",
         listaProjetosAtividades = listOf(
-            ProjetoAtividadeState("1099"),
-            ProjetoAtividadeState("1100"),
-            ProjetoAtividadeState("2099"),
-            ProjetoAtividadeState("5391"),
-            ProjetoAtividadeState("5392"),
+            ProjetoAtividadeRowState("1099"),
+            ProjetoAtividadeRowState("1100"),
+            ProjetoAtividadeRowState("2099"),
+            ProjetoAtividadeRowState("5391"),
+            ProjetoAtividadeRowState("5392"),
 //            ProjetoAtividadeState("5393"),
         ))
 
     private val grupoOnibusTerminais = GrupoState(
         nome = "Ônibus - Terminais",
         listaProjetosAtividades = listOf(
-            ProjetoAtividadeState("1095"),
-            ProjetoAtividadeState("1096"),
-            ProjetoAtividadeState("2096"),
+            ProjetoAtividadeRowState("1095"),
+            ProjetoAtividadeRowState("1096"),
+            ProjetoAtividadeRowState("2096"),
 //            ProjetoAtividadeState("3749"),
-            ProjetoAtividadeState("4663"),
+            ProjetoAtividadeRowState("4663"),
         ))
 
     private val grupoOnibusFrota = GrupoState(
         nome = "Ônibus - Frota",
         listaProjetosAtividades = listOf(
-            ProjetoAtividadeState("1800"),
+            ProjetoAtividadeRowState("1800"),
 //            ProjetoAtividadeState("3800"),
 //            ProjetoAtividadeState("3801")
         ))
@@ -98,55 +97,55 @@ class AppViewModel(
     private val grupoOnibusCompensacoes = GrupoState(
         nome = "Ônibus - Compensação tarifária",
         listaProjetosAtividades = listOf(
-            ProjetoAtividadeState("4701")
+            ProjetoAtividadeRowState("4701")
         ))
 
     private val grupoMeioAmbiente = GrupoState(
         nome = "Meio ambiente",
         listaProjetosAtividades = listOf(
-            ProjetoAtividadeState("1702"),
-            ProjetoAtividadeState("1703"),
-            ProjetoAtividadeState("1704"),
-            ProjetoAtividadeState("1705"),
-            ProjetoAtividadeState("1706"),
-            ProjetoAtividadeState("2324"),
-            ProjetoAtividadeState("2386"),
-            ProjetoAtividadeState("2702"),
-            ProjetoAtividadeState("2703"),
-            ProjetoAtividadeState("2704"),
-            ProjetoAtividadeState("2705"),
-            ProjetoAtividadeState("3355"),
-            ProjetoAtividadeState("5087"),
-            ProjetoAtividadeState("6007"),
-            ProjetoAtividadeState("6009"),
-            ProjetoAtividadeState("6010"),
-            ProjetoAtividadeState("6651"),
-            ProjetoAtividadeState("6655"),
-            ProjetoAtividadeState("6659"),
-            ProjetoAtividadeState("6660"),
-            ProjetoAtividadeState("6663"),
-            ProjetoAtividadeState("6669"),
-            ProjetoAtividadeState("6681"),
-            ProjetoAtividadeState("6682"),
-            ProjetoAtividadeState("6686"),
-            ProjetoAtividadeState("7117"),
-            ProjetoAtividadeState("7127")
+            ProjetoAtividadeRowState("1702"),
+            ProjetoAtividadeRowState("1703"),
+            ProjetoAtividadeRowState("1704"),
+            ProjetoAtividadeRowState("1705"),
+            ProjetoAtividadeRowState("1706"),
+            ProjetoAtividadeRowState("2324"),
+            ProjetoAtividadeRowState("2386"),
+            ProjetoAtividadeRowState("2702"),
+            ProjetoAtividadeRowState("2703"),
+            ProjetoAtividadeRowState("2704"),
+            ProjetoAtividadeRowState("2705"),
+            ProjetoAtividadeRowState("3355"),
+            ProjetoAtividadeRowState("5087"),
+            ProjetoAtividadeRowState("6007"),
+            ProjetoAtividadeRowState("6009"),
+            ProjetoAtividadeRowState("6010"),
+            ProjetoAtividadeRowState("6651"),
+            ProjetoAtividadeRowState("6655"),
+            ProjetoAtividadeRowState("6659"),
+            ProjetoAtividadeRowState("6660"),
+            ProjetoAtividadeRowState("6663"),
+            ProjetoAtividadeRowState("6669"),
+            ProjetoAtividadeRowState("6681"),
+            ProjetoAtividadeRowState("6682"),
+            ProjetoAtividadeRowState("6686"),
+            ProjetoAtividadeRowState("7117"),
+            ProjetoAtividadeRowState("7127")
         ))
 
     val listaGrupos = listOf(
-        grupoAsfalto,
-        grupoObrasViarias,
         grupoCalcadas,
         grupoSegurancaViaria,
+        grupoAsfalto,
         grupoBicicleta,
         grupoOnibusCorredores,
         grupoOnibusTerminais,
         grupoOnibusFrota,
         grupoOnibusCompensacoes,
+        grupoObrasViarias,
         grupoMeioAmbiente
     )
 
-    val listaCustomizadaProjetosAtividades = mutableStateListOf<ProjetoAtividadeState>()
+    val listaCustomizadaProjetosAtividades = mutableStateListOf<ProjetoAtividadeRowState>()
 
     val fullList: MutableStateFlow<LoadingState<List<ProjetoAtividade>>> = MutableStateFlow(
         LoadingState.NotStarted())
@@ -173,7 +172,6 @@ class AppViewModel(
         grupoState.refreshing.value = true
         grupoState.statePagoTotal.value = LoadingState.Loading()
         grupoState.stateEmpenhadoLiquidoTotal.value = LoadingState.Loading()
-        grupoState.statePagoCapital.value = LoadingState.Loading()
 
         val jobs = grupoState.listaProjetosAtividades.map {
             launchCoroutine {
@@ -184,25 +182,15 @@ class AppViewModel(
 
         var pagoGrupo = 0.0
         var empenhadoLiquidoGrupo = 0.0
-        var pagoCapitalGrupo = 0.0
 
         var failedDespesasTotal = false
-        var failedPagoCapital = false
 
         grupoState.listaProjetosAtividades.forEach {
 
-            failedDespesasTotal = when (val state = it.stateDespesasTotal.value) {
+            failedDespesasTotal = when (val state = it.stateTotalDespesas.value) {
                 is LoadingState.Success -> {
                     empenhadoLiquidoGrupo += state.response.empenhadoLiquido
                     pagoGrupo += state.response.pago
-                    false
-                }
-                else -> true
-            }
-
-            failedPagoCapital = when (val state = it.stateDespesasCapital.value) {
-                is LoadingState.Success -> {
-                    pagoCapitalGrupo += state.response.pago
                     false
                 }
                 else -> true
@@ -217,18 +205,12 @@ class AppViewModel(
             grupoState.statePagoTotal.value = LoadingState.Success(pagoGrupo)
         }
 
-        if (failedPagoCapital) {
-            grupoState.statePagoCapital.value = LoadingState.Failure("Erro ao carregar despesas de capital")
-        } else {
-            grupoState.statePagoCapital.value = LoadingState.Success(pagoCapitalGrupo)
-        }
-
         grupoState.refreshing.value = false
     }
 
-    fun removerDaListaCustomizada(projetoAtividadeState: ProjetoAtividadeState) {
+    fun removerDaListaCustomizada(projetoAtividadeRowState: ProjetoAtividadeRowState) {
 
-        listaCustomizadaProjetosAtividades.remove(projetoAtividadeState)
+        listaCustomizadaProjetosAtividades.remove(projetoAtividadeRowState)
     }
 
     fun adicionarAListaCustomizada(projetoAtividade: ProjetoAtividade) {
@@ -238,14 +220,14 @@ class AppViewModel(
             .contains(projetoAtividade.codProjetoAtividade)
         ) return
 
-        val projetoAtividadeState = ProjetoAtividadeState(
+        val projetoAtividadeRowState = ProjetoAtividadeRowState(
             codigo = projetoAtividade.codProjetoAtividade,
             stateProjeto = MutableStateFlow(LoadingState.Success(projetoAtividade))
         )
 
-        listaCustomizadaProjetosAtividades.add(0, projetoAtividadeState)
+        listaCustomizadaProjetosAtividades.add(0, projetoAtividadeRowState)
         launchCoroutine {
-            loadProjetoAtividadeComTotalDespesas(projetoAtividadeState)
+            loadProjetoAtividadeComTotalDespesas(projetoAtividadeRowState)
         }
     }
 
@@ -261,19 +243,19 @@ class AppViewModel(
             }
     }
 
-    private suspend fun loadProjetoAtividadeComTotalDespesas(projetoAtividadeState: ProjetoAtividadeState) {
-        if (projetoAtividadeState.stateProjeto.value !is LoadingState.Success) loadProjetoNome(projetoAtividadeState)
+    private suspend fun loadProjetoAtividadeComTotalDespesas(projetoAtividadeRowState: ProjetoAtividadeRowState) {
+        if (projetoAtividadeRowState.stateProjeto.value !is LoadingState.Success) loadProjetoNome(projetoAtividadeRowState)
 
-        loadTotalDespesas(projetoAtividadeState)
+        loadTotalDespesas(projetoAtividadeRowState)
     }
 
-    private suspend fun loadProjetoNome(projetoAtividadeState: ProjetoAtividadeState) {
+    private suspend fun loadProjetoNome(projetoAtividadeRowState: ProjetoAtividadeRowState) {
 
-        projetoAtividadeState.stateProjeto.value = LoadingState.Loading()
-        projetoAtividadeState.stateProjeto.value = try {
+        projetoAtividadeRowState.stateProjeto.value = LoadingState.Loading()
+        projetoAtividadeRowState.stateProjeto.value = try {
             LoadingState.Loading<String>()
             val nome = sofApi
-                .getProjetoAtividade(codProjetoAtividade = projetoAtividadeState.codigo)
+                .getProjetoAtividade(codProjetoAtividade = projetoAtividadeRowState.codigo)
                 .lstProjetosAtividades[0]
             LoadingState.Success(nome)
         } catch (e: Exception) {
@@ -282,57 +264,23 @@ class AppViewModel(
         }
     }
 
-    private suspend fun loadTotalDespesas(projetoAtividadeState: ProjetoAtividadeState) {
+    private suspend fun loadTotalDespesas(projetoAtividadeRowState: ProjetoAtividadeRowState) {
 
         try {
-            projetoAtividadeState.stateDespesasTotal.value = LoadingState.Loading()
+            projetoAtividadeRowState.stateTotalDespesas.value = LoadingState.Loading()
 
             val despesasResponse = sofApi
-                .getDespesas(codProjetoAtividade = projetoAtividadeState.codigo)
+                .getDespesa(
+                    codProjetoAtividade = projetoAtividadeRowState.codigo,
+                    codOrgao = projetoAtividadeRowState.codOrgao
+                )
 
-            val totalDespesas =
-                if (despesasResponse.metaDados.txtStatus == "SEM REGISTROS") {
-                    TotalDespesas(0.0, 0.0, 0.0, 0.0)
-                } else {
-                    val despesas = despesasResponse.lstDespesas[0]
-                    TotalDespesas(
-                        empenhadoLiquido = despesas.valEmpenhadoLiquido,
-                        pago = despesas.valPagoRestos + despesas.valPagoExercicio,
-                        orcadoInicial = despesas.valOrcadoInicial,
-                        orcadoAtualizado = despesas.valOrcadoAtualizado
-                    )
-                }
+            val totalDespesas = TotalDespesas.fromDespesasResponse(despesasResponse)
 
-            projetoAtividadeState.stateDespesasTotal.value = LoadingState.Success(totalDespesas)
+            projetoAtividadeRowState.stateTotalDespesas.value = LoadingState.Success(totalDespesas)
         } catch (e: Exception) {
             e.printStackTrace()
-            projetoAtividadeState.stateDespesasTotal.value = LoadingState.Failure("Erro ao carregar despesas: ${e::class.simpleName}")
-        }
-
-        try {
-            projetoAtividadeState.stateDespesasCapital.value = LoadingState.Loading()
-            val despesasResponse = sofApi.getDespesas(
-                codProjetoAtividade = projetoAtividadeState.codigo,
-                categoriaDespesa = CategoriaDespesa.DESPESAS_CAPITAL
-            )
-
-            val totalDespesas =
-                if (despesasResponse.metaDados.txtStatus == "SEM REGISTROS") {
-                    TotalDespesas(0.0, 0.0, 0.0, 0.0)
-                } else {
-                    val despesas = despesasResponse.lstDespesas[0]
-                    TotalDespesas(
-                        empenhadoLiquido = despesas.valEmpenhadoLiquido,
-                        pago = despesas.valPagoRestos + despesas.valPagoExercicio,
-                        orcadoInicial = despesas.valOrcadoInicial,
-                        orcadoAtualizado = despesas.valOrcadoAtualizado
-                    )
-                }
-
-            projetoAtividadeState.stateDespesasCapital.value = LoadingState.Success(totalDespesas)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            projetoAtividadeState.stateDespesasCapital.value = LoadingState.Failure("Erro ao carregar despesas: ${e::class.simpleName}")
+            projetoAtividadeRowState.stateTotalDespesas.value = LoadingState.Failure("Erro ao carregar despesas: ${e::class.simpleName}")
         }
     }
 
@@ -358,6 +306,10 @@ class AppViewModel(
             screenState.value = Screen.Home()
         }
 
+        fun navigateToFundurb() {
+            screenState.value = Screen.Fundurb()
+        }
+
         fun navigateToBuscaProjeto() {
             screenState.value = Screen.BuscaProjeto(::navigateToHome)
         }
@@ -369,6 +321,7 @@ class AppViewModel(
         fun navigateToProjetoAtividade(projetoAtividade: ProjetoAtividade, navigateUp: (() -> Unit)?) {
             screenState.value = Screen.ProjetoAtividade(
                 projetoAtividade,
+                null,
                 true,
                 navigateUp ?: ::navigateToHome
             )

@@ -1,6 +1,8 @@
 package org.cidadeape.monitoraorcamento.common
 
 import androidx.compose.foundation.clickable
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.RadioButtonColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -14,10 +16,10 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.sp
 import org.cidadeape.monitoraorcamento.data.model.empenhos.Empenho
-import org.cidadeape.monitoraorcamento.data.model.projetosAtividades.ProjetoAtividade
 
 fun colorizedText(color: Color, text: String): AnnotatedString {
 
@@ -30,9 +32,10 @@ fun colorizedText(color: Color, text: String): AnnotatedString {
 }
 
 @Composable
-fun TextTitle(text: String, modifier: Modifier = Modifier) {
+fun TextTitle(text: String, textAlign: TextAlign = TextAlign.Start, modifier: Modifier = Modifier) {
     Text(
         modifier = modifier,
+        textAlign = textAlign,
         fontSize = 18.sp,
         fontWeight = FontWeight.Bold,
         text = text
@@ -77,8 +80,35 @@ object AppColors {
 
     val SuperLightRed = Color(0xFFFFDDDD)
 
+    val SuperLightYellow = Color(0xFFFFE0D0)
+
+    val DarkYellow = Color(0xFF9a7000)
+
     val DarkGray = Color(0xFF333333)
 
-    val Purple = Color(0xFF6200EE)
+    val MediumGreen = Color(0xFF569F99)
 
+    val SuperLightBlue = Color(0xFFD0F0FF)
+
+    val MediumBlue = Color(0xFF1A5073)
+
+    val DarkBlue = Color(0xFF1C354C)
+
+}
+
+object AppButtonColors {
+
+    val BlueButton = ButtonColors(
+        containerColor = AppColors.MediumBlue,
+        contentColor = Color.White,
+        disabledContainerColor = AppColors.SuperLightGray,
+        disabledContentColor = Color.White
+    )
+
+    val GreenButton = ButtonColors(
+        containerColor = AppColors.MediumGreen,
+        contentColor = Color.White,
+        disabledContainerColor = AppColors.SuperLightGray,
+        disabledContentColor = Color.White
+    )
 }

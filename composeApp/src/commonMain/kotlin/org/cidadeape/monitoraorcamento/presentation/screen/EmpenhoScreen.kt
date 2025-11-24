@@ -82,7 +82,7 @@ fun EmpenhoScreen(
 
             var openSei by remember { mutableStateOf(false) }
             Text(
-                color = AppColors.Purple,
+                color = AppColors.MediumBlue,
                 modifier = Modifier.clickable {
                     openSei = true
                 },

@@ -29,8 +29,10 @@ import monitoraorcamento.composeapp.generated.resources.Res
 import monitoraorcamento.composeapp.generated.resources.refresh_24dp
 import org.cidadeape.monitoraorcamento.common.AppColors
 import org.cidadeape.monitoraorcamento.common.LoadingState
+import org.cidadeape.monitoraorcamento.common.TextTitle
 import org.cidadeape.monitoraorcamento.common.Util
 import org.cidadeape.monitoraorcamento.common.colorizedText
+import org.cidadeape.monitoraorcamento.presentation.App
 import org.cidadeape.monitoraorcamento.presentation.AppViewModel
 import org.jetbrains.compose.resources.imageResource
 
@@ -41,6 +43,12 @@ fun HomeScreen(
     Column(
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())
     ) {
+
+        TextTitle(
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            textAlign = TextAlign.Center,
+            text = "Orçamento Geral de Mobilidade",
+        )
 
 //        Text(
 //            modifier = Modifier.fillMaxWidth().padding(16.dp).clickable {
@@ -59,14 +67,14 @@ fun HomeScreen(
 //            textAlign = TextAlign.Start,
 //            text = "> Busca customizada de Empenhos"
 //        )
-
-        Text(
-            modifier = Modifier.fillMaxWidth().padding(16.dp, 16.dp, 16.dp, 4.dp),
-            textAlign = TextAlign.Start,
-            fontWeight = FontWeight.Bold,
-            color = AppColors.Purple,
-            text = "Mobilidade Urbana - Valores pagos em 2025 por tema"
-        )
+//
+//        Text(
+//            modifier = Modifier.fillMaxWidth().padding(16.dp, 16.dp, 16.dp, 4.dp),
+//            textAlign = TextAlign.Start,
+//            fontWeight = FontWeight.Bold,
+//            color = AppColors.Purple,
+//            text = "Mobilidade Urbana - Valores pagos em 2025 por tema"
+//        )
 
         val listaGrupos = remember { appViewModel.listaGrupos }
 
@@ -77,16 +85,14 @@ fun HomeScreen(
     }
 }
 
-
 @Composable
 fun GrupoRow(
     appViewModel: AppViewModel,
     grupoState: GrupoState
 ) {
 
+    val empenhadoLiquidoTotalState = grupoState.stateEmpenhadoLiquidoTotal.collectAsState()
     val pagoTotalState = grupoState.statePagoTotal.collectAsState()
-    val pagoCapitalState = grupoState.statePagoCapital.collectAsState()
-    val empenhadoTotalState = grupoState.stateEmpenhadoLiquidoTotal.collectAsState()
 
     Row(
         modifier = Modifier.fillMaxWidth()
@@ -112,6 +118,28 @@ fun GrupoRow(
 
             Text(
                 modifier = Modifier.wrapContentWidth().padding(0.dp, 8.dp, 0.dp, 0.dp).align(Alignment.End),
+                fontSize = 12.sp,
+                textAlign = TextAlign.End,
+                text = when (val state = empenhadoLiquidoTotalState.value) {
+                    is LoadingState.Loading ->
+                        colorizedText(text = "Carregando...", color = Color.Black)
+
+                    is LoadingState.Success ->
+                        colorizedText(
+                            text = "Empenhado (líquido): ${Util.formatToCurrency(state.response)}",
+                            color = Color.Black
+                        )
+
+                    is LoadingState.Failure ->
+                        colorizedText(text = state.message, color = Color.Red)
+
+                    else ->
+                        colorizedText(text = "-", color = Color.Black)
+                }
+            )
+
+            Text(
+                modifier = Modifier.wrapContentWidth().align(Alignment.End),
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.End,
                 fontSize = 18.sp,
@@ -133,50 +161,6 @@ fun GrupoRow(
                 }
             )
 
-            Text(
-                modifier = Modifier.wrapContentWidth().align(Alignment.End),
-                fontSize = 12.sp,
-                textAlign = TextAlign.End,
-                text =
-                when (val state = pagoCapitalState.value) {
-                    is LoadingState.Loading ->
-                        colorizedText(text = "Carregando...", color = Color.Black)
-
-                    is LoadingState.Success ->
-                        colorizedText(
-                            text = "Investimentos: ${Util.formatToCurrency(state.response)}",
-                            color = Color.Black
-                        )
-
-                    is LoadingState.Failure ->
-                        colorizedText(text = state.message, color = Color.Red)
-
-                    else ->
-                        colorizedText(text = "-", color = Color.Black)
-                }
-            )
-
-            Text(
-                modifier = Modifier.wrapContentWidth().align(Alignment.End),
-                fontSize = 12.sp,
-                textAlign = TextAlign.End,
-                text = when (val state = empenhadoTotalState.value) {
-                    is LoadingState.Loading ->
-                        colorizedText(text = "Carregando...", color = Color.Black)
-
-                    is LoadingState.Success ->
-                        colorizedText(
-                            text = "Total empenhado: ${Util.formatToCurrency(state.response)}",
-                            color = Color.Black
-                        )
-
-                    is LoadingState.Failure ->
-                        colorizedText(text = state.message, color = Color.Red)
-
-                    else ->
-                        colorizedText(text = "-", color = Color.Black)
-                }
-            )
         }
 
         Column(modifier = Modifier

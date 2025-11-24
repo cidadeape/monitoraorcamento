@@ -6,7 +6,9 @@ sealed class Screen(
     val navigateUp: () -> Unit
 ) {
 
-    class Home: Screen("Monitoramento do Orçamento Municipal de SP de 2025", false, {})
+    class Home: Screen("Monitoramento do Orçamento Municipal - 2025", false, {})
+
+    class Fundurb: Screen("FUNDURB", false, {})
 
     class BuscaProjeto(
         navigateUp: () -> Unit
@@ -28,6 +30,7 @@ sealed class Screen(
 
     class ProjetoAtividade(
         val projetoAtividade: org.cidadeape.monitoraorcamento.data.model.projetosAtividades.ProjetoAtividade,
+        val listaEmpenhos: List<org.cidadeape.monitoraorcamento.data.model.empenhos.Empenho>?,
         canNavigateBack: Boolean,
         navigateUp: () -> Unit
     ): Screen(

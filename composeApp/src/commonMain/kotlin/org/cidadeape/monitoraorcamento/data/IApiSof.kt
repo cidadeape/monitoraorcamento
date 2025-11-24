@@ -21,7 +21,7 @@ interface IApiSof {
         codVinculacaoRecurso: String? = null
     ): List<Empenho>
 
-    suspend fun getDespesas(
+    suspend fun getDespesa(
         ano: String = anoDefault,
         mes: String = mesDefault,
         codProjetoAtividade: String? = null,

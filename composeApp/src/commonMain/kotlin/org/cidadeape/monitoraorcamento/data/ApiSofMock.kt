@@ -4,7 +4,6 @@ import org.cidadeape.monitoraorcamento.data.model.CategoriaDespesa
 import org.cidadeape.monitoraorcamento.data.model.Metadados
 import org.cidadeape.monitoraorcamento.data.model.despesa.DespesaResponse
 import org.cidadeape.monitoraorcamento.data.model.empenhos.Empenho
-import org.cidadeape.monitoraorcamento.data.model.empenhos.EmpenhoResponse
 import org.cidadeape.monitoraorcamento.data.model.mockListDespesas
 import org.cidadeape.monitoraorcamento.data.model.mockListEmpenhos
 import org.cidadeape.monitoraorcamento.data.model.mockListProjetosAtividades
@@ -19,7 +18,7 @@ class ApiSofMock: IApiSof {
         ano: String,
         mes: String,
         codProjetoAtividade: String?,
-        codOrgao: String?,
+        codOrgao: Int?,
         codFonteRecurso: String?,
         codReferencia: String?,
         codDestinacaoRecurso: String?,
@@ -28,10 +27,11 @@ class ApiSofMock: IApiSof {
         return mockListEmpenhos
     }
 
-    override suspend fun getDespesas(
+    override suspend fun getDespesa(
         ano: String,
         mes: String,
-        codProjetoAtividade: String,
+        codProjetoAtividade: String?,
+        codOrgao: Int?,
         categoriaDespesa: CategoriaDespesa?
     ): DespesaResponse {
         return DespesaResponse(
@@ -58,6 +58,4 @@ class ApiSofMock: IApiSof {
             else mockListProjetosAtividades.filter { it.codProjetoAtividade == codProjetoAtividade }
         )
     }
-
-
 }

@@ -146,7 +146,7 @@ class ApiSof: IApiSof {
         return empenhoResponse
     }
 
-    override suspend fun getDespesas(
+    override suspend fun getDespesa(
         ano: String,
         mes: String,
         codProjetoAtividade: String?,

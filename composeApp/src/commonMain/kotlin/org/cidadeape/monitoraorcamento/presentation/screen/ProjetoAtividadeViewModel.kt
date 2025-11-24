@@ -12,23 +12,34 @@ import kotlinx.coroutines.launch
 import org.cidadeape.monitoraorcamento.common.LoadingState
 import org.cidadeape.monitoraorcamento.common.Util
 import org.cidadeape.monitoraorcamento.data.ApiSof
+import org.cidadeape.monitoraorcamento.data.IApiSof
 import org.cidadeape.monitoraorcamento.data.model.empenhos.Empenho
 import org.cidadeape.monitoraorcamento.data.model.projetosAtividades.ProjetoAtividade
 import kotlin.reflect.KClass
 
 class ProjetoAtividadeViewModel(
-    private val sofApi: ApiSof = ApiSof()
+    private val sofApi: IApiSof = ApiSof(),
+    val projetoAtividade: ProjetoAtividade,
+    listaEmpenhos: List<Empenho>?
 ): ViewModel() {
 
-    lateinit var projetoAtividade: ProjetoAtividade
     var projetoAtividadeState = ProjetoAtividadeState()
 
-    fun load(projetoAtividade: ProjetoAtividade) {
-        this.projetoAtividade = projetoAtividade
+    init {
         projetoAtividadeState.codigo.value = projetoAtividade.codProjetoAtividade
         projetoAtividadeState.nome.value = projetoAtividade.txtDescricaoProjetoAtividade
 
-        loadEmpenhos(projetoAtividade.codProjetoAtividade)
+        if (listaEmpenhos != null) {
+            onListaEmpenhosLoaded(listaEmpenhos)
+        } else {
+            loadEmpenhos(projetoAtividade.codProjetoAtividade)
+        }
+    }
+
+    private fun onListaEmpenhosLoaded(listaEmpenhos: List<Empenho>) {
+        projetoAtividadeState.stateListaEmpenhos.value = LoadingState.Success(listaEmpenhos)
+        val totalEmpenhado = listaEmpenhos.sumOf { it.valEmpenhadoLiquido }
+        projetoAtividadeState.stateTotalEmpenhado.value = LoadingState.Success(Util.formatToCurrency(totalEmpenhado))
     }
 
     private fun loadEmpenhos(codProjetoAtividade: String) {
@@ -38,9 +49,7 @@ class ProjetoAtividadeViewModel(
         launchCoroutine {
             try {
                 val listaEmpenhos = sofApi.getEmpenhos(codProjetoAtividade = codProjetoAtividade)
-                projetoAtividadeState.stateListaEmpenhos.value = LoadingState.Success(listaEmpenhos)
-                val totalEmpenhado = listaEmpenhos.sumOf { it.valEmpenhadoLiquido }
-                projetoAtividadeState.stateTotalEmpenhado.value = LoadingState.Success(Util.formatToCurrency(totalEmpenhado))
+                onListaEmpenhosLoaded(listaEmpenhos)
             } catch (e: Exception) {
                 e.printStackTrace()
                 projetoAtividadeState.stateListaEmpenhos.value = LoadingState.Failure("Erro ao carregar empenhos: ${e::class.simpleName}")
@@ -59,9 +68,16 @@ class ProjetoAtividadeViewModel(
     )
 
     @Suppress("UNCHECKED_CAST")
-    class Factory: ViewModelProvider.Factory {
+    class Factory(
+        private val projetoAtividade: ProjetoAtividade,
+        private val listaEmpenhos: List<Empenho>?
+    ): ViewModelProvider.Factory {
+
         override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T {
-            return ProjetoAtividadeViewModel() as T
+            return ProjetoAtividadeViewModel(
+                projetoAtividade = projetoAtividade,
+                listaEmpenhos = listaEmpenhos
+            ) as T
         }
     }
 
