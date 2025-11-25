@@ -36,37 +36,33 @@ fun ListaEmpenhos(
 ) {
 
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         val totalEmpenhosState = stateTotalEmpenhado.collectAsState()
         val listaEmpenhosState = stateListaEmpenhos.collectAsState()
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            when (val state = totalEmpenhosState.value) {
-                is LoadingState.Failure -> Text(state.message)
-                is LoadingState.Success -> {
+        when (val state = totalEmpenhosState.value) {
+            is LoadingState.Failure -> Text(state.message)
+            is LoadingState.Success -> {
 
-                    Text(
-                        modifier = Modifier.padding(16.dp, 0.dp, 0.dp, 0.dp),
-                        textAlign = TextAlign.Start,
-                        text = "Total empenhado líquido em 2025:"
-                    )
+                Text(
+                    modifier = Modifier.padding(16.dp, 0.dp, 16.dp, 0.dp),
+                    textAlign = TextAlign.Start,
+                    text = "Total empenhado (líquido):"
+                )
 
-                    Text(
-                        modifier = Modifier.padding(8.dp, 0.dp, 0.dp, 0.dp),
-                        textAlign = TextAlign.Start,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        text = state.response
-                    )
-                }
-
-                else -> {}
+                Text(
+                    modifier = Modifier.padding(16.dp, 0.dp, 16.dp, 0.dp),
+                    textAlign = TextAlign.Start,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    text = state.response
+                )
             }
+
+            else -> {}
         }
 
         when (val state = listaEmpenhosState.value) {

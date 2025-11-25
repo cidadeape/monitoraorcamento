@@ -18,28 +18,25 @@ import org.cidadeape.monitoraorcamento.data.model.projetosAtividades.ProjetoAtiv
 import kotlin.reflect.KClass
 
 class ProjetoAtividadeViewModel(
-    private val sofApi: IApiSof = ApiSof(),
-    val projetoAtividade: ProjetoAtividade,
-    listaEmpenhos: List<Empenho>?
+    private val sofApi: IApiSof = ApiSof()
 ): ViewModel() {
 
+    lateinit var projetoAtividade: ProjetoAtividade
     var projetoAtividadeState = ProjetoAtividadeState()
 
-    init {
+    fun load(projetoAtividade: ProjetoAtividade) {
+        this.projetoAtividade = projetoAtividade
         projetoAtividadeState.codigo.value = projetoAtividade.codProjetoAtividade
         projetoAtividadeState.nome.value = projetoAtividade.txtDescricaoProjetoAtividade
 
-        if (listaEmpenhos != null) {
-            onListaEmpenhosLoaded(listaEmpenhos)
-        } else {
-            loadEmpenhos(projetoAtividade.codProjetoAtividade)
-        }
+        loadEmpenhos(projetoAtividade.codProjetoAtividade)
     }
 
     private fun onListaEmpenhosLoaded(listaEmpenhos: List<Empenho>) {
         projetoAtividadeState.stateListaEmpenhos.value = LoadingState.Success(listaEmpenhos)
         val totalEmpenhado = listaEmpenhos.sumOf { it.valEmpenhadoLiquido }
         projetoAtividadeState.stateTotalEmpenhado.value = LoadingState.Success(Util.formatToCurrency(totalEmpenhado))
+
     }
 
     private fun loadEmpenhos(codProjetoAtividade: String) {
@@ -68,16 +65,9 @@ class ProjetoAtividadeViewModel(
     )
 
     @Suppress("UNCHECKED_CAST")
-    class Factory(
-        private val projetoAtividade: ProjetoAtividade,
-        private val listaEmpenhos: List<Empenho>?
-    ): ViewModelProvider.Factory {
-
+    class Factory: ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T {
-            return ProjetoAtividadeViewModel(
-                projetoAtividade = projetoAtividade,
-                listaEmpenhos = listaEmpenhos
-            ) as T
+            return ProjetoAtividadeViewModel() as T
         }
     }
 

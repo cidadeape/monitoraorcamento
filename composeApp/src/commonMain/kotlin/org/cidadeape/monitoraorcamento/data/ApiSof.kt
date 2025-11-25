@@ -99,7 +99,7 @@ class ApiSof: IApiSof {
                 ano,
                 mes,
                 codProjetoAtividade,
-                codOrgao.toString(),
+                codOrgao,
                 codFonteRecurso,
                 codReferencia,
                 codDestinacaoRecurso,
@@ -117,7 +117,7 @@ class ApiSof: IApiSof {
         ano: String,
         mes: String,
         codProjetoAtividade: String?,
-        codOrgao: String?,
+        codOrgao: Int?,
         codFonteRecurso: String?,
         codReferencia: String?,
         codDestinacaoRecurso: String?,
@@ -134,7 +134,7 @@ class ApiSof: IApiSof {
                 parameters.append("mesEmpenho", mes)
                 parameters.append("numPagina", pagina.toString())
                 codProjetoAtividade?.let { parameters.append("codProjetoAtividade", it) }
-                codOrgao?.let { parameters.append("codOrgao", it) }
+                codOrgao?.let { parameters.append("codOrgao", it.toString()) }
                 codFonteRecurso?.let { parameters.append("codFonteRecurso", it) }
                 codReferencia?.let { parameters.append("codReferencia", it) }
                 codDestinacaoRecurso?.let { parameters.append("codDestinacaoRecurso", it) }

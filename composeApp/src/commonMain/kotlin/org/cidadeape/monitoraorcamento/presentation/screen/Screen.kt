@@ -30,7 +30,6 @@ sealed class Screen(
 
     class ProjetoAtividade(
         val projetoAtividade: org.cidadeape.monitoraorcamento.data.model.projetosAtividades.ProjetoAtividade,
-        val listaEmpenhos: List<org.cidadeape.monitoraorcamento.data.model.empenhos.Empenho>?,
         canNavigateBack: Boolean,
         navigateUp: () -> Unit
     ): Screen(

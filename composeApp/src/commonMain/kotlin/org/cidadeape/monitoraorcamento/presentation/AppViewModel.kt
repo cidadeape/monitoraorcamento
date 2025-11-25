@@ -321,7 +321,6 @@ class AppViewModel(
         fun navigateToProjetoAtividade(projetoAtividade: ProjetoAtividade, navigateUp: (() -> Unit)?) {
             screenState.value = Screen.ProjetoAtividade(
                 projetoAtividade,
-                null,
                 true,
                 navigateUp ?: ::navigateToHome
             )

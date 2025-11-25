@@ -24,7 +24,6 @@ import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,8 +38,6 @@ import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.DialogNavigator
-import androidx.navigation.compose.rememberNavController
 import org.cidadeape.monitoraorcamento.common.AppButtonColors
 import org.cidadeape.monitoraorcamento.common.AppColors
 import org.cidadeape.monitoraorcamento.common.colorizedText
@@ -203,11 +200,9 @@ fun App(viewModel: AppViewModel = viewModel<AppViewModel>(factory = AppViewModel
                         is Screen.Grupo -> GrupoScreen(viewModel, screen.grupoState)
                         is Screen.ProjetoAtividade -> ProjetoAtividadeScreen(
                             viewModel<ProjetoAtividadeViewModel>(
-                                factory = ProjetoAtividadeViewModel.Factory(
-                                    screen.projetoAtividade,
-                                    screen.listaEmpenhos
-                                )
-                            )
+                                factory = ProjetoAtividadeViewModel.Factory(),
+                            ),
+                            screen.projetoAtividade
                         )
                         is Screen.Empenho -> EmpenhoScreen(screen.empenho)
                     }

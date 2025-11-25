@@ -12,14 +12,17 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.cidadeape.monitoraorcamento.common.TextTitle
+import org.cidadeape.monitoraorcamento.data.model.projetosAtividades.ProjetoAtividade
 import org.cidadeape.monitoraorcamento.presentation.AppViewModel
 import org.cidadeape.monitoraorcamento.presentation.compose.ListaEmpenhos
 
 @Composable
 fun ProjetoAtividadeScreen(
-    viewModel: ProjetoAtividadeViewModel
+    viewModel: ProjetoAtividadeViewModel,
+    projetoAtividade: ProjetoAtividade
 ) {
 
+    viewModel.load(projetoAtividade)
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -42,8 +45,8 @@ fun ProjetoAtividadeScreen(
             ListaEmpenhos(
                 viewModel.projetoAtividadeState.stateTotalEmpenhado,
                 viewModel.projetoAtividadeState.stateListaEmpenhos,
-                listName = "Empenhos projAtiv ${viewModel.projetoAtividade.codProjetoAtividade}",
-                { AppViewModel.navigateToProjetoAtividade(viewModel.projetoAtividade, null) }
+                listName = "Empenhos projAtiv ${projetoAtividade.codProjetoAtividade}",
+                { AppViewModel.navigateToProjetoAtividade(projetoAtividade, null) }
             )
         }
     }
