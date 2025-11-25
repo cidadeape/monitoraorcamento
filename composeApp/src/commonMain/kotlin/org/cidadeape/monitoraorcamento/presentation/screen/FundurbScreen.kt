@@ -40,7 +40,7 @@ fun FundurbScreen(
     ) {
 
         TextTitle(
-            modifier = Modifier.fillMaxWidth().padding(16.dp, 16.dp, 16.dp, 8.dp),
+            modifier = Modifier.padding(16.dp, 16.dp, 16.dp, 8.dp),
             text = "FUNDURB",
         )
 
