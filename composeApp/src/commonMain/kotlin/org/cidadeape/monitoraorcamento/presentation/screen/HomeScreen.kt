@@ -21,8 +21,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import monitoraorcamento.composeapp.generated.resources.Res
@@ -41,13 +44,19 @@ fun HomeScreen(
     appViewModel: AppViewModel
 ) {
     Column(
-        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())
+        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
         TextTitle(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
-            textAlign = TextAlign.Center,
-            text = "Orçamento Geral de Mobilidade",
+            modifier = Modifier.padding(16.dp, 16.dp, 16.dp, 8.dp),
+            text = "Orçamento Comparativo de Mobilidade",
+        )
+
+        Text(
+            modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 8.dp),
+            fontStyle = FontStyle.Italic,
+            text = "(Dotações agrupadas por tema)",
         )
 
 //        Text(

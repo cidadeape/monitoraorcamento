@@ -118,7 +118,7 @@ fun EmpenhoRow(
             .clickable {
                 AppViewModel.navigateToEmpenho(empenho, onNavigateUpFromEmpenho)
             }
-            .padding(16.dp)
+            .padding(32.dp, 16.dp, 32.dp, 16.dp)
     ) {
         Row (
             modifier = Modifier.fillMaxWidth(),
@@ -139,11 +139,6 @@ fun EmpenhoRow(
 
         Text(
             text = "Projeto / Atividade: ${empenho.codProjetoAtividade} - ${empenho.txDescricaoProjetoAtividade}",
-            fontSize = 12.sp
-        )
-
-        Text(
-            text = "Item / Despesa: ${empenho.codItemDespesa} - ${empenho.txDescricaoItemDespesa}",
             fontSize = 12.sp
         )
 

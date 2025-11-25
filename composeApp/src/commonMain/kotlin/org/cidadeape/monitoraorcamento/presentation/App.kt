@@ -100,51 +100,6 @@ fun AppTopBar(
     )
 }
 
-@Composable
-fun TopMenu() {
-
-    Row(modifier = Modifier.fillMaxWidth()) {
-        Button(
-            modifier = Modifier.weight(1f).padding(8.dp),
-            shape = RectangleShape,
-            colors = AppButtonColors.BlueButton,
-            onClick = { AppViewModel.navigateToHome() }
-        ) {
-            Text(
-                fontWeight = FontWeight.Bold,
-                text = "Mobilidade Geral"
-            )
-        }
-
-        Button(
-            modifier = Modifier.weight(1f).padding(8.dp),
-            shape = RectangleShape,
-            colors = AppButtonColors.BlueButton,
-            onClick = { AppViewModel.navigateToFundurb() }
-        ) {
-            Text(
-                fontWeight = FontWeight.Bold,
-                text = "FUNDURB"
-            )
-        }
-
-//        Button(
-//            modifier = Modifier.weight(1f),
-//            onClick = {  }
-//        ) {
-//            Text("FMDT")
-//        }
-//
-//        Button(
-//            modifier = Modifier.weight(1f),
-//            onClick = {  }
-//        ) {
-//            Text("Subprefeituras")
-//        }
-    }
-
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
@@ -172,7 +127,7 @@ fun App(viewModel: AppViewModel = viewModel<AppViewModel>(factory = AppViewModel
             ) {
 
                 PrimaryTabRow(selectedTabIndex = selectedTabIndex) {
-                    listOf("Mobilidade Geral", "Fundurb").forEachIndexed { index, tabName ->
+                    listOf("Comparativo Mobilidade", "Fundurb").forEachIndexed { index, tabName ->
                         Tab(
                             selected = selectedTabIndex == index,
                             onClick = {

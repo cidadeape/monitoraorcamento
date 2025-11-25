@@ -29,10 +29,11 @@ fun ProjetoAtividadeScreen(
     ) {
 
         Column(
-            modifier = Modifier.fillMaxWidth().padding(24.dp)
+            modifier = Modifier.fillMaxWidth().padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            TextTitle(text = viewModel.projetoAtividadeState.nome.value ?: "-")
+            TextTitle(text = "Projeto / Atividade: ${viewModel.projetoAtividadeState.nome.value ?: "-"}")
 
             Text(
                 fontSize = 12.sp,
@@ -41,7 +42,7 @@ fun ProjetoAtividadeScreen(
             )
         }
 
-        Column (modifier = Modifier.padding(16.dp, 0.dp, 16.dp, 0.dp)) {
+        Column (modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 0.dp)) {
             ListaEmpenhos(
                 viewModel.projetoAtividadeState.stateTotalEmpenhado,
                 viewModel.projetoAtividadeState.stateListaEmpenhos,

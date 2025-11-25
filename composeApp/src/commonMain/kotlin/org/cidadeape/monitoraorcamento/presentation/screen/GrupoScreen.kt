@@ -11,12 +11,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.cidadeape.monitoraorcamento.common.AppColors
 import org.cidadeape.monitoraorcamento.common.LoadingState
+import org.cidadeape.monitoraorcamento.common.TextTitle
 import org.cidadeape.monitoraorcamento.common.Util
 import org.cidadeape.monitoraorcamento.presentation.AppViewModel
 import org.cidadeape.monitoraorcamento.presentation.compose.ListaProjetoAtividade
@@ -40,15 +42,8 @@ fun GrupoScreen(
             }
         ) {
 
-            val stateTotalPago = grupoState.statePagoTotal.collectAsState()
             val stateTotalEmpenhado = grupoState.stateEmpenhadoLiquidoTotal.collectAsState()
-
-            val textPago: String = when (val state = stateTotalPago.value) {
-                is LoadingState.NotStarted -> "-"
-                is LoadingState.Loading -> "Carregando..."
-                is LoadingState.Success -> Util.formatToCurrency(state.response)
-                is LoadingState.Failure -> state.message
-            }
+            val stateTotalPago = grupoState.statePagoTotal.collectAsState()
 
             val textEmpenhadoLiquido: String = when (val state = stateTotalEmpenhado.value) {
                 is LoadingState.NotStarted -> "-"
@@ -57,22 +52,32 @@ fun GrupoScreen(
                 is LoadingState.Failure -> state.message
             }
 
-            Column {
+            val textPago: String = when (val state = stateTotalPago.value) {
+                is LoadingState.NotStarted -> "-"
+                is LoadingState.Loading -> "Carregando..."
+                is LoadingState.Success -> Util.formatToCurrency(state.response)
+                is LoadingState.Failure -> state.message
+            }
 
-                Text(
-                    modifier = Modifier.fillMaxWidth().padding(16.dp),
-                    textAlign = TextAlign.Start,
-                    fontWeight = FontWeight.Bold,
-                    color = AppColors.MediumBlue,
-                    text = "Total pago: $textPago"
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+
+                TextTitle(
+                    modifier = Modifier.padding(16.dp),
+                    text = "Dotações agrupadas pelo tema: ${grupoState.nome}",
                 )
 
                 Text(
-                    modifier = Modifier.fillMaxWidth().padding(16.dp, 0.dp, 16.dp, 16.dp),
-                    textAlign = TextAlign.Start,
+                    modifier = Modifier.padding(16.dp, 0.dp, 16.dp, 0.dp),
+                    text = "Total Empenhado (líquido): $textEmpenhadoLiquido"
+                )
+
+                Text(
+                    modifier = Modifier.padding(16.dp, 0.dp, 16.dp, 16.dp),
                     fontWeight = FontWeight.Bold,
                     color = AppColors.MediumBlue,
-                    text = "Total empenhado líquido: $textEmpenhadoLiquido"
+                    text = "Total Pago: $textPago"
                 )
 
                 val lista = grupoState.listaProjetosAtividades

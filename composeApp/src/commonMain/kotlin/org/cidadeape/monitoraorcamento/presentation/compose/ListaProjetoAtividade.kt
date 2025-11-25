@@ -105,7 +105,10 @@ fun ProjetoAtividadeRow(
             )
         }
 
-        Column(modifier = Modifier.weight(1f)) {
+        Column(
+            modifier = Modifier.weight(1f),
+            horizontalAlignment = Alignment.End
+        ) {
 
             when (val state = despesasTotalState.value) {
                 is LoadingState.Loading -> {
