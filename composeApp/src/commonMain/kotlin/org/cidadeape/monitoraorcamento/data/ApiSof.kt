@@ -37,7 +37,7 @@ class ApiSof: IApiSof {
     private val endpointProjetosAtividades = "projetosAtividades"
 
     private val auth_update_token = "Basic eV9XaVBpc2U3TTdSOGVtZURQa1hUbEk5YXA0YTpJRUV0OUJIREhWbDMyeWRhbmdVWFFYSmVGM29h"
-    private var token = "ecf4080a-52ab-37f7-b487-1b4d026246e5"
+    private var token = "557fc11f-169e-3e2f-be3e-93187790dfba"
     private var tokenTimeout: Long = Clock.System.now().toEpochMilliseconds()
 
     private fun hasTokenTimedOut(): Boolean {
