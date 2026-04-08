@@ -8,6 +8,7 @@ import org.cidadeape.monitoraorcamento.data.model.projetosAtividades.ProjetoAtiv
 import org.cidadeape.monitoraorcamento.domain.model.TotalDespesas
 
 data class GrupoState (
+    val id: String,
     val nome: String,
     val listaProjetosAtividades: List<ProjetoAtividadeRowState>,
     val refreshing: MutableState<Boolean> = mutableStateOf(false),

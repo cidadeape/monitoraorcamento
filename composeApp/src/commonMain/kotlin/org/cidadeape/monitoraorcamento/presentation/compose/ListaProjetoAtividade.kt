@@ -30,7 +30,7 @@ import org.cidadeape.monitoraorcamento.common.LoadingState
 import org.cidadeape.monitoraorcamento.common.Util
 import org.cidadeape.monitoraorcamento.common.colorizedText
 import org.cidadeape.monitoraorcamento.data.model.projetosAtividades.ProjetoAtividade
-import org.cidadeape.monitoraorcamento.presentation.AppViewModel
+import org.cidadeape.monitoraorcamento.presentation.Navigation
 import org.cidadeape.monitoraorcamento.presentation.screen.ProjetoAtividadeRowState
 
 @Composable
@@ -68,7 +68,7 @@ fun ProjetoAtividadeRow(
             .clickable {
                 val state = projetoState.value as? LoadingState.Success<ProjetoAtividade>
                 state?.let {
-                    AppViewModel.navigateToProjetoAtividade(state.response, navigateUp)
+                    Navigation.navigateToProjetoAtividade(state.response, navigateUp)
                 }
             }.padding(16.dp)
     ) {

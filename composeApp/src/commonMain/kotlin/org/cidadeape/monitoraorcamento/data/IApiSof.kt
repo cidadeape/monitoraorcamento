@@ -7,11 +7,11 @@ import org.cidadeape.monitoraorcamento.data.model.projetosAtividades.ProjetosAti
 
 interface IApiSof {
 
-    var anoDefault: String
+    var ano: String
     var mesDefault: String
 
     suspend fun getEmpenhos(
-        ano: String = anoDefault,
+        ano: String = this@IApiSof.ano,
         mes: String = mesDefault,
         codProjetoAtividade: String? = null,
         codOrgao: Int? = null,
@@ -22,7 +22,7 @@ interface IApiSof {
     ): List<Empenho>
 
     suspend fun getDespesa(
-        ano: String = anoDefault,
+        ano: String = this@IApiSof.ano,
         mes: String = mesDefault,
         codProjetoAtividade: String? = null,
         codOrgao: Int? = null,
@@ -30,7 +30,7 @@ interface IApiSof {
     ): DespesaResponse
 
     suspend fun getProjetoAtividade(
-        ano: String = anoDefault,
+        ano: String = this@IApiSof.ano,
         codProjetoAtividade: String?
     ): ProjetosAtividadesResponse
 

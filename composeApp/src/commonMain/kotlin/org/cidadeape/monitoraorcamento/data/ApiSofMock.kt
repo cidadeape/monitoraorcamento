@@ -11,7 +11,7 @@ import org.cidadeape.monitoraorcamento.data.model.projetosAtividades.ProjetosAti
 
 class ApiSofMock: IApiSof {
 
-    override var anoDefault: String = "2025"
+    override var ano: String = "2025"
     override var mesDefault: String = "12"
 
     override suspend fun getEmpenhos(

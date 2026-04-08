@@ -1,17 +1,18 @@
 package org.cidadeape.monitoraorcamento.presentation.screen
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
 import org.cidadeape.monitoraorcamento.common.LoadingState
+import org.cidadeape.monitoraorcamento.common.Logger
+import org.cidadeape.monitoraorcamento.data.Ano
 import org.cidadeape.monitoraorcamento.data.model.empenhos.Empenho
 import org.cidadeape.monitoraorcamento.domain.OrgaoUseCase
 import org.cidadeape.monitoraorcamento.domain.model.TotalDespesas
+import org.cidadeape.monitoraorcamento.presentation.BaseViewModel
 
 class FundurbViewModel(
-    private val orgaoUseCase: OrgaoUseCase = OrgaoUseCase(codOrgao = COD_ORGAO_FUNDURB)
-): ViewModel() {
+    ano: Ano,
+    private val orgaoUseCase: OrgaoUseCase = OrgaoUseCase(ano = ano.nome, codOrgao = COD_ORGAO_FUNDURB)
+): BaseViewModel() {
 
     val stateTotalDespesas: MutableStateFlow<LoadingState<TotalDespesas>> = MutableStateFlow(LoadingState.NotStarted())
 
@@ -20,38 +21,49 @@ class FundurbViewModel(
     val stateListEmpenho: MutableStateFlow<LoadingState<List<Empenho>>> = MutableStateFlow(LoadingState.NotStarted())
 
     fun initialize() {
-        if (stateTotalDespesas.value !is LoadingState.Success)
-            loadTotalDespesasFundurb()
 
-        if (stateListProjetosAtividadesRowState.value !is LoadingState.Success)
-            loadProjetosAtividadesComDespesas()
+        Logger.d(TAG, "initialize()")
+//        cancel()
 
-        if (stateListEmpenho.value !is LoadingState.Success)
-            loadListaEmpenhos()
+//        if (stateTotalDespesas.value !is LoadingState.Success)
+//            loadTotalDespesasFundurb()
+//
+//        if (stateListProjetosAtividadesRowState.value !is LoadingState.Success)
+//            loadProjetosAtividadesComDespesas()
+//
+//        if (stateListEmpenho.value !is LoadingState.Success)
+//            loadListaEmpenhos()
     }
 
-    private fun loadListaEmpenhos() = viewModelScope.launch {
+    private fun loadListaEmpenhos() = launchCoroutine {
+        Logger.i(TAG, "loadListaEmpenho started")
         stateListEmpenho.value = LoadingState.Loading()
         try {
             stateListEmpenho.value = LoadingState.Success(orgaoUseCase.getEmpenhos())
+            Logger.i(TAG, "loadListaEmpenho successful")
         } catch (e: Exception) {
             e.printStackTrace()
             stateListEmpenho.value = LoadingState.Failure("Erro ao carregar lista de empenhos Fundurb.")
+            Logger.e(TAG, "loadListaEmpenho failed with message: ${e.message}")
         }
     }
 
-    private fun loadTotalDespesasFundurb() = viewModelScope.launch {
+    private fun loadTotalDespesasFundurb() = launchCoroutine {
+        Logger.i(TAG, "loadTotalDespesasFundurb started")
         stateTotalDespesas.value = LoadingState.Loading()
         try {
             stateTotalDespesas.value = LoadingState.Success(orgaoUseCase.getTotalDespesas())
+            Logger.i(TAG, "loadTotalDespesasFundurb successful")
         } catch (e: Exception) {
             e.printStackTrace()
             stateTotalDespesas.value =
                 LoadingState.Failure("Erro ao carregar totais")
+
+            Logger.e(TAG, "loadTotalDespesasFundurb failed with message: ${e.message}")
         }
     }
 
-    private fun loadProjetosAtividadesComDespesas() = viewModelScope.launch {
+    private fun loadProjetosAtividadesComDespesas() = launchCoroutine {
         loadProjetosAtividades()
         loadTotalDespesasProjetosAtividades()
         ordenarPorTotalPago()
@@ -70,6 +82,7 @@ class FundurbViewModel(
     }
 
     private suspend fun loadProjetosAtividades() {
+        Logger.i(TAG, "loadProjetosAtividades started")
         stateListProjetosAtividadesRowState.value = LoadingState.Loading()
         try {
             val projetosAtividades = orgaoUseCase.getProjetosAtividades()
@@ -83,17 +96,22 @@ class FundurbViewModel(
             }
 
             stateListProjetosAtividadesRowState.value = LoadingState.Success(listProjetoAtividadeRowState)
+            Logger.i(TAG, "loadProjetosAtividades successful")
         } catch (e: Exception) {
             e.printStackTrace()
             stateListProjetosAtividadesRowState.value = LoadingState.Failure(
                 "Erro ao carregar projetos/atividades"
             )
+            Logger.e(TAG, "loadProjetosAtividades failed with message: ${e.message}")
         }
     }
 
     private suspend fun loadTotalDespesasProjetosAtividades() {
+
         val listProjAtivRowState = stateListProjetosAtividadesRowState.value
                 as? LoadingState.Success ?: return
+
+        Logger.i(TAG, "loadTotalDespesasProjetosAtividades started")
 
         listProjAtivRowState.response.forEach { projAtivRowState ->
 
@@ -107,9 +125,11 @@ class FundurbViewModel(
                             " ${projAtivRowState.codigo}")
             }
         }
+        Logger.i(TAG, "loadTotalDespesasProjetosAtividades finished")
     }
 
     companion object {
+        private const val TAG = "FundurbViewModel"
         private const val COD_ORGAO_FUNDURB = 98
     }
 }

@@ -6,7 +6,7 @@ sealed class Screen(
     val navigateUp: () -> Unit
 ) {
 
-    class Home: Screen("Monitoramento do Orçamento Municipal - 2025", false, {})
+    class Home: Screen("Monitoramento do Orçamento Municipal", false, {})
 
     class Fundurb: Screen("FUNDURB", false, {})
 
@@ -19,11 +19,12 @@ sealed class Screen(
     ): Screen("Monitora Orçamento - Busca Empenhos", true, navigateUp)
 
     class Grupo(
-        val grupoState: GrupoState,
+        val grupoId: String,
+        val grupoNome: String,
         canNavigateBack: Boolean,
         navigateUp: () -> Unit
     ): Screen(
-        title = "${grupoState.nome} - Projetos / Atividades",
+        title = "$grupoNome - Projetos / Atividades",
         canNavigateBack = canNavigateBack,
         navigateUp = navigateUp
     )

@@ -2,6 +2,7 @@ package org.cidadeape.monitoraorcamento.presentation
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,6 +20,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Tab
@@ -27,18 +29,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import org.cidadeape.monitoraorcamento.common.AppButtonColors
+import kotlinx.datetime.Clock.System
 import org.cidadeape.monitoraorcamento.common.AppColors
 import org.cidadeape.monitoraorcamento.common.colorizedText
 import org.cidadeape.monitoraorcamento.presentation.screen.BuscaEmpenhoScreen
@@ -55,16 +55,35 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import monitoraorcamento.composeapp.generated.resources.Res
 import monitoraorcamento.composeapp.generated.resources.cidadeape_redondo_transp_texto_branco
+import org.cidadeape.monitoraorcamento.common.AppButtonColors
+import org.cidadeape.monitoraorcamento.common.Logger
+import org.cidadeape.monitoraorcamento.data.Ano
+import org.cidadeape.monitoraorcamento.presentation.screen.BuscaProjetoScreenVM
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppTopBar(
-    currentScreen: Screen
+    currentScreen: Screen,
+    ano: Ano,
+    onChangeAno: (ano: Ano) -> Unit
 ) {
+
+    var buttonColor2025 by remember {mutableStateOf(AppButtonColors.BlueButton)}
+    var buttonColor2026 by remember {mutableStateOf(AppButtonColors.GreenButton)}
+
+    if (ano == Ano._2025){
+        buttonColor2025 = AppButtonColors.GreenButton
+        buttonColor2026 = AppButtonColors.BlueButton
+    } else if (ano == Ano._2026) {
+        buttonColor2025 = AppButtonColors.BlueButton
+        buttonColor2026 = AppButtonColors.GreenButton
+    }
+
     TopAppBar(
         title = {
-            Box(
-                contentAlignment = Alignment.CenterStart
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
                     modifier = Modifier.height(32.dp).wrapContentWidth(),
@@ -72,12 +91,25 @@ fun AppTopBar(
                     contentDescription = "logo da cidadeapé"
                 )
                 Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center,
+                    modifier = Modifier.weight(1f).padding(32.dp, 0.dp, 0.dp, 0.dp),
+                    textAlign = TextAlign.Start,
                     maxLines = 1,
                     overflow = TextOverflow.Clip,
-                    text = "Monitoramento do Orçamento Municipal - 2025"
+                    text = "Monitoramento do Orçamento Municipal"
                 )
+                Button(
+                    onClick = { onChangeAno(Ano._2025) },
+                    colors = buttonColor2025
+                ) {
+                    Text(text = "2025")
+                }
+                Button(
+                    modifier = Modifier.padding(32.dp, 0.dp, 64.dp, 0.dp),
+                    onClick = { onChangeAno(Ano._2026) },
+                    colors = buttonColor2026
+                ) {
+                    Text(text = "2026")
+                }
             }
         },
         colors = TopAppBarColors(
@@ -103,16 +135,24 @@ fun AppTopBar(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
-fun App(viewModel: AppViewModel = viewModel<AppViewModel>(factory = AppViewModel.Factory())) {
+fun App() {
 
-    val fundurbViewModel = FundurbViewModel()
+    var ano by remember { mutableStateOf(Ano._2025) }
 
-    val screenState by remember { AppViewModel.screenState }
+    Logger.i("App", "Ano: ${ano.nome}")
+
+    val homeViewModel = HomeViewModel(ano)
+
+    val buscaProjetoViewModel = BuscaProjetoScreenVM(ano)
+
+    val fundurbViewModel = FundurbViewModel(ano)
+
+    val screenState by remember { Navigation.screenState }
 
     MaterialTheme {
         Scaffold(
             topBar = {
-                AppTopBar(screenState)
+                AppTopBar(screenState, ano, {newAno -> ano = newAno})
             },
         ) { innerPadding ->
 
@@ -127,14 +167,16 @@ fun App(viewModel: AppViewModel = viewModel<AppViewModel>(factory = AppViewModel
             ) {
 
                 PrimaryTabRow(selectedTabIndex = selectedTabIndex) {
-                    listOf("Comparativo Mobilidade", "Fundurb").forEachIndexed { index, tabName ->
+                    listOf("Comparativo Mobilidade", "FUNDURB", "Busca de Projetos/Atividades").forEachIndexed { index, tabName ->
                         Tab(
                             selected = selectedTabIndex == index,
                             onClick = {
                                 if (index == 0) {
-                                    AppViewModel.navigateToHome()
+                                    Navigation.navigateToHome()
                                 } else if (index == 1) {
-                                    AppViewModel.navigateToFundurb()
+                                    Navigation.navigateToFundurb()
+                                } else if (index == 2) {
+                                    Navigation.navigateToBuscaProjeto()
                                 }
                                 selectedTabIndex = index
                              },
@@ -148,14 +190,19 @@ fun App(viewModel: AppViewModel = viewModel<AppViewModel>(factory = AppViewModel
                 Box(modifier = Modifier.weight(1f)) {
 
                     when (val screen = screenState) {
-                        is Screen.Home -> HomeScreen(viewModel)
+                        is Screen.Home -> HomeScreen(homeViewModel)
                         is Screen.Fundurb -> FundurbScreen(fundurbViewModel)
-                        is Screen.BuscaProjeto -> BuscaProjetoScreen(viewModel)
-                        is Screen.BuscaEmpenho -> BuscaEmpenhoScreen()
-                        is Screen.Grupo -> GrupoScreen(viewModel, screen.grupoState)
+                        is Screen.BuscaProjeto -> BuscaProjetoScreen(buscaProjetoViewModel)
+                        is Screen.BuscaEmpenho -> BuscaEmpenhoScreen(ano)
+                        is Screen.Grupo -> {
+
+                            Logger.i("App", "GrupoScreen recalled")
+
+                            GrupoScreen(screen.grupoId, homeViewModel)
+                        }
                         is Screen.ProjetoAtividade -> ProjetoAtividadeScreen(
                             viewModel<ProjetoAtividadeViewModel>(
-                                factory = ProjetoAtividadeViewModel.Factory(),
+                                factory = ProjetoAtividadeViewModel.Factory(ano),
                             ),
                             screen.projetoAtividade
                         )

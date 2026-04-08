@@ -25,7 +25,7 @@ import org.cidadeape.monitoraorcamento.common.AppColors
 import org.cidadeape.monitoraorcamento.common.LoadingState
 import org.cidadeape.monitoraorcamento.common.Util
 import org.cidadeape.monitoraorcamento.data.model.empenhos.Empenho
-import org.cidadeape.monitoraorcamento.presentation.AppViewModel
+import org.cidadeape.monitoraorcamento.presentation.Navigation
 
 @Composable
 fun ListaEmpenhos(
@@ -116,7 +116,7 @@ fun EmpenhoRow(
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                AppViewModel.navigateToEmpenho(empenho, onNavigateUpFromEmpenho)
+                Navigation.navigateToEmpenho(empenho, onNavigateUpFromEmpenho)
             }
             .padding(32.dp, 16.dp, 32.dp, 16.dp)
     ) {

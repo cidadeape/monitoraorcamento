@@ -7,12 +7,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import org.cidadeape.monitoraorcamento.common.LoadingState
 import org.cidadeape.monitoraorcamento.common.Util
+import org.cidadeape.monitoraorcamento.data.Ano
 import org.cidadeape.monitoraorcamento.data.ApiSof
 import org.cidadeape.monitoraorcamento.data.IApiSof
 import org.cidadeape.monitoraorcamento.data.model.empenhos.Empenho
 
 class BuscaEmpenhoScreenVM(
-    private val apiSof: IApiSof = ApiSof()
+    ano: Ano,
+    private val apiSof: IApiSof = ApiSof(ano.nome)
 ): ViewModel() {
 
     var stateTotalEmpenhado: MutableStateFlow<LoadingState<String>> =

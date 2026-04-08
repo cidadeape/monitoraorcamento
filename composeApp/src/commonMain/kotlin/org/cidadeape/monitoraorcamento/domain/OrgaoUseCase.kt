@@ -9,7 +9,8 @@ import org.cidadeape.monitoraorcamento.data.model.projetosAtividades.ProjetoAtiv
 import org.cidadeape.monitoraorcamento.domain.model.TotalDespesas
 
 class OrgaoUseCase(
-    private val apiSof: IApiSof = ApiSof(),
+    private val ano: String,
+    private val apiSof: IApiSof = ApiSof(ano),
     private val codOrgao: Int
 ) {
 

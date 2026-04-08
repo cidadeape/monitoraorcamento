@@ -1,6 +1,5 @@
 package org.cidadeape.monitoraorcamento.presentation.screen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -10,38 +9,31 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import monitoraorcamento.composeapp.generated.resources.Res
-import monitoraorcamento.composeapp.generated.resources.refresh_24dp
 import org.cidadeape.monitoraorcamento.common.AppColors
 import org.cidadeape.monitoraorcamento.common.LoadingState
 import org.cidadeape.monitoraorcamento.common.TextTitle
 import org.cidadeape.monitoraorcamento.common.Util
 import org.cidadeape.monitoraorcamento.common.colorizedText
-import org.cidadeape.monitoraorcamento.presentation.App
-import org.cidadeape.monitoraorcamento.presentation.AppViewModel
-import org.jetbrains.compose.resources.imageResource
+import org.cidadeape.monitoraorcamento.presentation.HomeViewModel
+import org.cidadeape.monitoraorcamento.presentation.Navigation
 
 @Composable
 fun HomeScreen(
-    appViewModel: AppViewModel
+    homeViewModel: HomeViewModel
 ) {
     Column(
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
@@ -59,36 +51,10 @@ fun HomeScreen(
             text = "(Dotações agrupadas por tema)",
         )
 
-//        Text(
-//            modifier = Modifier.fillMaxWidth().padding(16.dp).clickable {
-//                AppViewModel.navigateToBuscaProjeto()
-//            },
-//            color = AppColors.Purple,
-//            textAlign = TextAlign.Start,
-//            text = "> Busca customizada de Projetos e Atividades"
-//        )
-//
-//        Text(
-//            modifier = Modifier.fillMaxWidth().padding(16.dp).clickable {
-//                AppViewModel.navigateToBuscaEmpenho()
-//            },
-//            color = AppColors.Purple,
-//            textAlign = TextAlign.Start,
-//            text = "> Busca customizada de Empenhos"
-//        )
-//
-//        Text(
-//            modifier = Modifier.fillMaxWidth().padding(16.dp, 16.dp, 16.dp, 4.dp),
-//            textAlign = TextAlign.Start,
-//            fontWeight = FontWeight.Bold,
-//            color = AppColors.Purple,
-//            text = "Mobilidade Urbana - Valores pagos em 2025 por tema"
-//        )
-
-        val listaGrupos = remember { appViewModel.listaGrupos }
+        val listaGrupos = homeViewModel.listaGrupos
 
         for (grupoState in listaGrupos) {
-            GrupoRow(appViewModel, grupoState)
+            GrupoRow(grupoState)
             Spacer(modifier = Modifier.fillMaxWidth().height(1.dp).background(AppColors.SuperLightGray))
         }
     }
@@ -96,7 +62,6 @@ fun HomeScreen(
 
 @Composable
 fun GrupoRow(
-    appViewModel: AppViewModel,
     grupoState: GrupoState
 ) {
 
@@ -105,7 +70,7 @@ fun GrupoRow(
 
     Row(
         modifier = Modifier.fillMaxWidth()
-            .clickable { AppViewModel.navigateToGrupo(grupoState) }
+            .clickable { Navigation.navigateToGrupo(grupoState.id, grupoState.nome) }
             .padding(16.dp)
     ) {
         Column(modifier = Modifier

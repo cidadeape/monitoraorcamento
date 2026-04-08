@@ -25,9 +25,8 @@ import org.cidadeape.monitoraorcamento.data.model.TokenResponse
 import org.cidadeape.monitoraorcamento.data.model.despesa.DespesaResponse
 import org.cidadeape.monitoraorcamento.data.model.empenhos.Empenho
 
-class ApiSof: IApiSof {
+class ApiSof(override var ano: String) : IApiSof {
 
-    override var anoDefault: String = "2025"
     override var mesDefault: String = "12"
 
     private val https_protocol = URLProtocol.HTTPS
@@ -36,9 +35,13 @@ class ApiSof: IApiSof {
     private val endpointDespesas = "despesas"
     private val endpointProjetosAtividades = "projetosAtividades"
 
-    private val auth_update_token = "Basic eV9XaVBpc2U3TTdSOGVtZURQa1hUbEk5YXA0YTpJRUV0OUJIREhWbDMyeWRhbmdVWFFYSmVGM29h"
-    private var token = "ecf4080a-52ab-37f7-b487-1b4d026246e5"
+    private val auth_update_token = "Basic M2J0MWlvNkM2SHBhcWthakdTanRmN2NmNjVZYTpPamkwMXluQ21WYUw0QUZvVkJvZmVYeFIxbnNh"
+    private var token = "264b6df8-bfb3-373d-be9b-169a944ac893"
     private var tokenTimeout: Long = Clock.System.now().toEpochMilliseconds()
+
+    init {
+        ano.toInt()
+    }
 
     private fun hasTokenTimedOut(): Boolean {
         val now = Clock.System.now().toEpochMilliseconds()

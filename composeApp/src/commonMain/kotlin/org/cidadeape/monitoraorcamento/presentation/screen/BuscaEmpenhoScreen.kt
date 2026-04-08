@@ -20,12 +20,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import org.cidadeape.monitoraorcamento.common.TextTitle
-import org.cidadeape.monitoraorcamento.presentation.AppViewModel
+import org.cidadeape.monitoraorcamento.data.Ano
+import org.cidadeape.monitoraorcamento.presentation.Navigation
 import org.cidadeape.monitoraorcamento.presentation.compose.ListaEmpenhos
 
 @Composable
 fun BuscaEmpenhoScreen(
-    viewModel: BuscaEmpenhoScreenVM = BuscaEmpenhoScreenVM()
+    ano: Ano,
+    viewModel: BuscaEmpenhoScreenVM = BuscaEmpenhoScreenVM(ano)
 ) {
 
     Column(
@@ -94,7 +96,7 @@ fun BuscaEmpenhoScreen(
 
         Column (modifier = Modifier.padding(16.dp, 0.dp, 16.dp, 0.dp)) {
             ListaEmpenhos(viewModel.stateTotalEmpenhado, viewModel.stateListaEmpenhos) {
-                AppViewModel.navigateToHome()
+                Navigation.navigateToHome()
             }
         }
     }

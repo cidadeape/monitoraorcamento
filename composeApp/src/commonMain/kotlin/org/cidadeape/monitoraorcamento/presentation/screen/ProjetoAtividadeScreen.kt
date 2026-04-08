@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.cidadeape.monitoraorcamento.common.TextTitle
 import org.cidadeape.monitoraorcamento.data.model.projetosAtividades.ProjetoAtividade
-import org.cidadeape.monitoraorcamento.presentation.AppViewModel
+import org.cidadeape.monitoraorcamento.presentation.Navigation
 import org.cidadeape.monitoraorcamento.presentation.compose.ListaEmpenhos
 
 @Composable
@@ -47,7 +47,7 @@ fun ProjetoAtividadeScreen(
                 viewModel.projetoAtividadeState.stateTotalEmpenhado,
                 viewModel.projetoAtividadeState.stateListaEmpenhos,
                 listName = "Empenhos projAtiv ${projetoAtividade.codProjetoAtividade}",
-                { AppViewModel.navigateToProjetoAtividade(projetoAtividade, null) }
+                { Navigation.navigateToProjetoAtividade(projetoAtividade, null) }
             )
         }
     }

@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import org.cidadeape.monitoraorcamento.common.LoadingState
 import org.cidadeape.monitoraorcamento.common.Util
+import org.cidadeape.monitoraorcamento.data.Ano
 import org.cidadeape.monitoraorcamento.data.ApiSof
 import org.cidadeape.monitoraorcamento.data.IApiSof
 import org.cidadeape.monitoraorcamento.data.model.empenhos.Empenho
@@ -18,7 +19,8 @@ import org.cidadeape.monitoraorcamento.data.model.projetosAtividades.ProjetoAtiv
 import kotlin.reflect.KClass
 
 class ProjetoAtividadeViewModel(
-    private val sofApi: IApiSof = ApiSof()
+    ano: Ano,
+    private val sofApi: IApiSof = ApiSof(ano.nome)
 ): ViewModel() {
 
     lateinit var projetoAtividade: ProjetoAtividade
@@ -65,9 +67,9 @@ class ProjetoAtividadeViewModel(
     )
 
     @Suppress("UNCHECKED_CAST")
-    class Factory: ViewModelProvider.Factory {
+    class Factory(val ano: Ano): ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T {
-            return ProjetoAtividadeViewModel() as T
+            return ProjetoAtividadeViewModel(ano) as T
         }
     }
 

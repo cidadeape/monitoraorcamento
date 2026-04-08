@@ -2,7 +2,6 @@ package org.cidadeape.monitoraorcamento.presentation.screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,7 +23,7 @@ import org.cidadeape.monitoraorcamento.common.TextTitle
 import org.cidadeape.monitoraorcamento.common.Util
 import org.cidadeape.monitoraorcamento.data.model.empenhos.Empenho
 import org.cidadeape.monitoraorcamento.domain.model.TotalDespesas
-import org.cidadeape.monitoraorcamento.presentation.AppViewModel
+import org.cidadeape.monitoraorcamento.presentation.Navigation
 import org.cidadeape.monitoraorcamento.presentation.compose.ButtonBaixarEmpenhos
 import org.cidadeape.monitoraorcamento.presentation.compose.ListaProjetoAtividade
 
@@ -41,7 +40,7 @@ fun FundurbScreen(
 
         TextTitle(
             modifier = Modifier.padding(16.dp, 16.dp, 16.dp, 8.dp),
-            text = "FUNDURB",
+            text = "FUNDURB - Fundo de Desenvolvimento Urbano",
         )
 
         val stateTotalDespesas = fundurbViewModel.stateTotalDespesas.collectAsState()
@@ -62,7 +61,7 @@ fun FundurbScreen(
             is LoadingState.Success -> {
                 ListaProjetoAtividade(
                     state.response,
-                    navigateUp = { AppViewModel.navigateToFundurb() }
+                    navigateUp = { Navigation.navigateToFundurb() }
                 )
             }
             is LoadingState.Failure -> {

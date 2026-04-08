@@ -41,22 +41,22 @@ import org.cidadeape.monitoraorcamento.common.LoadingState
 import org.cidadeape.monitoraorcamento.common.Util
 import org.cidadeape.monitoraorcamento.common.colorizedText
 import org.cidadeape.monitoraorcamento.data.model.projetosAtividades.ProjetoAtividade
-import org.cidadeape.monitoraorcamento.presentation.AppViewModel
+import org.cidadeape.monitoraorcamento.presentation.Navigation
 import org.jetbrains.compose.resources.imageResource
 
 @Composable
 fun BuscaProjetoScreen(
-    appViewModel: AppViewModel
+    viewModel: BuscaProjetoScreenVM
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
 
-        val fullListState = appViewModel.fullList.collectAsState()
+        val fullListState = viewModel.fullList.collectAsState()
 
         when (val state = fullListState.value) {
             is LoadingState.Success -> {
-                ListLoadedView(appViewModel, state.response)
+                ListLoadedView(viewModel, state.response)
             }
             is LoadingState.Loading -> {
                 Text(
@@ -76,7 +76,7 @@ fun BuscaProjetoScreen(
 
 @Composable
 fun ListLoadedView(
-    appViewModel: AppViewModel,
+    viewModel: BuscaProjetoScreenVM,
     fullList: List<ProjetoAtividade>
 ) {
     Column(
@@ -110,7 +110,7 @@ fun ListLoadedView(
                 val projetos = fullList.filter { codigos.contains(it.codProjetoAtividade) }
 
                 projetos.forEach {
-                    appViewModel.adicionarAListaCustomizada(it)
+                    viewModel.adicionarAListaCustomizada(it)
                 }
             }
         ) {
@@ -119,9 +119,9 @@ fun ListLoadedView(
 
         Text("Buscar projeto e atividade por termo")
 
-        AutocompleteTextView(appViewModel, fullList)
+        AutocompleteTextView(viewModel, fullList)
 
-        val lista = remember { appViewModel.listaCustomizadaProjetosAtividades }
+        val lista = remember { viewModel.listaCustomizadaProjetosAtividades }
 
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
@@ -129,7 +129,7 @@ fun ListLoadedView(
         ) {
 
             items(lista) { projetoAtividade ->
-                ProjetoAtividadeRow(appViewModel, projetoAtividade)
+                ProjetoAtividadeRow(viewModel, projetoAtividade)
                 Spacer(
                     modifier = Modifier.fillMaxWidth().height(1.dp)
                         .background(AppColors.SuperLightGray)
@@ -141,7 +141,7 @@ fun ListLoadedView(
 
 @Composable
 fun AutocompleteTextView(
-    viewModel: AppViewModel,
+    viewModel: BuscaProjetoScreenVM,
     fullList: List<ProjetoAtividade>
 ) {
 
@@ -208,7 +208,7 @@ fun AutocompleteTextView(
 
 @Composable
 fun ProjetoAtividadeRow(
-    appViewModel: AppViewModel,
+    viewModel: BuscaProjetoScreenVM,
     projetoAtividadeRowState: ProjetoAtividadeRowState
 ) {
 
@@ -220,7 +220,7 @@ fun ProjetoAtividadeRow(
             .clickable {
                 val state = projetoState.value as? LoadingState.Success<ProjetoAtividade>
                 state?.let {
-                    AppViewModel.navigateToProjetoAtividade(state.response, AppViewModel::navigateToHome)
+                    Navigation.navigateToProjetoAtividade(state.response, Navigation::navigateToHome)
                 }
             }.padding(0.dp, 16.dp, 0.dp, 16.dp)
     ) {
@@ -277,7 +277,7 @@ fun ProjetoAtividadeRow(
                 modifier = Modifier
                     .padding(8.dp)
                     .size(24.dp)
-                    .clickable { appViewModel.removerDaListaCustomizada(projetoAtividadeRowState) },
+                    .clickable { viewModel.removerDaListaCustomizada(projetoAtividadeRowState) },
                 bitmap = imageResource(Res.drawable.close_24dp),
                 contentDescription = "Remover"
             )
