@@ -157,9 +157,9 @@ class AppViewModel(
     fun load() {
         loadAllGrupos()
 
-        launchCoroutine {
-            loadSearchList()
-        }
+//        launchCoroutine {
+//            loadSearchList()
+//        }
     }
 
     private fun loadAllGrupos() = launchCoroutine {
