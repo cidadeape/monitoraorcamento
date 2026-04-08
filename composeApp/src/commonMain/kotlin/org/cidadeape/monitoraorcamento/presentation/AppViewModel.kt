@@ -162,23 +162,24 @@ class AppViewModel(
         }
     }
 
-    private fun loadAllGrupos() {
+    private fun loadAllGrupos() = launchCoroutine {
         for (grupo in listaGrupos) {
             loadGrupo(grupo)
         }
     }
 
-    fun loadGrupo(grupoState: GrupoState) = launchCoroutine {
+    fun reloadGrupo(grupoState: GrupoState) = launchCoroutine {
+        loadGrupo(grupoState)
+    }
+
+    suspend fun loadGrupo(grupoState: GrupoState) {
         grupoState.refreshing.value = true
         grupoState.statePagoTotal.value = LoadingState.Loading()
         grupoState.stateEmpenhadoLiquidoTotal.value = LoadingState.Loading()
 
-        val jobs = grupoState.listaProjetosAtividades.map {
-            launchCoroutine {
-                loadProjetoAtividadeComTotalDespesas(it)
-            }
+        for (projAtiv in grupoState.listaProjetosAtividades) {
+            loadProjetoAtividadeComTotalDespesas(projAtiv)
         }
-        jobs.joinAll()
 
         var pagoGrupo = 0.0
         var empenhadoLiquidoGrupo = 0.0

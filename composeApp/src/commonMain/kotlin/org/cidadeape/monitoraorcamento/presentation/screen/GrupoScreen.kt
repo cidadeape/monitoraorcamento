@@ -38,7 +38,7 @@ fun GrupoScreen(
         PullToRefreshBox(
             isRefreshing = refreshing,
             onRefresh = {
-                appViewModel.loadGrupo(grupoState)
+                appViewModel.reloadGrupo(grupoState)
             }
         ) {
 
