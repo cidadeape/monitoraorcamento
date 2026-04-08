@@ -27,7 +27,7 @@ import org.cidadeape.monitoraorcamento.data.model.empenhos.Empenho
 
 class ApiSof: IApiSof {
 
-    override var anoDefault: String = "2025"
+    override var anoDefault: String = "2026"
     override var mesDefault: String = "12"
 
     private val https_protocol = URLProtocol.HTTPS

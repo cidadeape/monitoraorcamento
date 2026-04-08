@@ -76,7 +76,7 @@ fun AppTopBar(
                     textAlign = TextAlign.Center,
                     maxLines = 1,
                     overflow = TextOverflow.Clip,
-                    text = "Monitoramento do Orçamento Municipal - 2025"
+                    text = "Monitoramento do Orçamento Municipal - 2026"
                 )
             }
         },
