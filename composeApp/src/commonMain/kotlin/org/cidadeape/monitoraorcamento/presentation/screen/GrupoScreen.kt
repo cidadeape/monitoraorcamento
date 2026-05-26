@@ -2,7 +2,6 @@ package org.cidadeape.monitoraorcamento.presentation.screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -14,7 +13,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import org.cidadeape.monitoraorcamento.common.AppColors
 import org.cidadeape.monitoraorcamento.common.LoadingState
@@ -42,8 +40,16 @@ fun GrupoScreen(
             }
         ) {
 
-            val stateTotalEmpenhado = grupoState.stateEmpenhadoLiquidoTotal.collectAsState()
-            val stateTotalPago = grupoState.statePagoTotal.collectAsState()
+            val stateOrcadoAtualizado = grupoState.stateOrcadoAtualizado.collectAsState()
+            val stateTotalEmpenhado = grupoState.stateEmpenhadoLiquido.collectAsState()
+            val stateTotalPago = grupoState.statePago.collectAsState()
+
+            val textOrcadoAtualizado: String = when (val state = stateOrcadoAtualizado.value) {
+                is LoadingState.NotStarted -> "-"
+                is LoadingState.Loading -> "Carregando..."
+                is LoadingState.Success -> Util.formatToCurrency(state.response)
+                is LoadingState.Failure -> state.message
+            }
 
             val textEmpenhadoLiquido: String = when (val state = stateTotalEmpenhado.value) {
                 is LoadingState.NotStarted -> "-"
@@ -70,7 +76,12 @@ fun GrupoScreen(
 
                 Text(
                     modifier = Modifier.padding(16.dp, 0.dp, 16.dp, 0.dp),
-                    text = "Total Empenhado (líquido): $textEmpenhadoLiquido"
+                    text = "Total Orçado: $textOrcadoAtualizado"
+                )
+
+                Text(
+                    modifier = Modifier.padding(16.dp, 0.dp, 16.dp, 0.dp),
+                    text = "Total Empenhado: $textEmpenhadoLiquido"
                 )
 
                 Text(

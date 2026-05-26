@@ -136,7 +136,7 @@ fun ProjetoAtividadeRow(
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.End,
                         fontSize = 12.sp,
-                        text = "Empenhado (líquido): ${Util.formatToCurrency(state.response.empenhadoLiquido)}"
+                        text = "Empenhado: ${Util.formatToCurrency(state.response.empenhadoLiquido)}"
                     )
 
                     Text(
