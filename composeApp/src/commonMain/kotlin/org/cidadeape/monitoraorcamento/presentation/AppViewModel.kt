@@ -10,7 +10,6 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import org.cidadeape.monitoraorcamento.common.LoadingState
 import org.cidadeape.monitoraorcamento.data.ApiSof
@@ -42,7 +41,7 @@ class AppViewModel(
         ))
 
     private val grupoCalcadas = GrupoState(
-        nome = "Calçadas",
+        nome = "Reforma de calçadas",
         listaProjetosAtividades = listOf(
             ProjetoAtividadeRowState("1169")
         ))
@@ -57,48 +56,44 @@ class AppViewModel(
         ))
 
     private val grupoSegurancaViaria = GrupoState(
-        nome = "Segurança Viária",
+        nome = "Projetos de Segurança Viária",
         listaProjetosAtividades = listOf(
             ProjetoAtividadeRowState("3757"),
-            ProjetoAtividadeRowState("3664"),
+            ProjetoAtividadeRowState("3664")
+        ))
+
+    private val grupoFiscalizacao = GrupoState(
+        nome = "Fiscalização do trânsito",
+        listaProjetosAtividades = listOf(
             ProjetoAtividadeRowState("4656"),
             ProjetoAtividadeRowState("4703")
         ))
 
-    private val grupoOnibusCorredores = GrupoState(
-        nome = "Ônibus - Corredores e Faixas",
+    private val grupoOnibusInvestimentos = GrupoState(
+        nome = "Sistema de Ônibus - Investimentos",
         listaProjetosAtividades = listOf(
-            ProjetoAtividadeRowState("1099"),
-            ProjetoAtividadeRowState("1100"),
-            ProjetoAtividadeRowState("2099"),
-            ProjetoAtividadeRowState("5391"),
-            ProjetoAtividadeRowState("5392"),
-//            ProjetoAtividadeState("5393"),
+            ProjetoAtividadeRowState("1800"), // Eletrificação da frota
+
+            ProjetoAtividadeRowState("1099"), // Contrução e Implantação de Corredores de Ônibus
+            ProjetoAtividadeRowState("5392"), // Implantação de Corredores de Ônibus Novos
+            ProjetoAtividadeRowState("1100"), // Acess, Ampliação e Reforma de Corredores
+            ProjetoAtividadeRowState("5391"), // Construção e implantação de faixas exclusivas
+            ProjetoAtividadeRowState("5394"), // Acessibilidade, Ampliação, Reforma e Requalificação de Faixas Exclusivas de Ônibus, inclusive Área d
+
+            ProjetoAtividadeRowState("1095"), // Construção e Implantação de Terminais de Ônibus
+            ProjetoAtividadeRowState("1096"), // Acessibilidade, Ampliação, Reforma e Requalificação de Terminais
+
         ))
 
-    private val grupoOnibusTerminais = GrupoState(
-        nome = "Ônibus - Terminais",
+    private val grupoOnibusOperacao = GrupoState(
+        nome = "Sistema de Ônibus - Operação",
         listaProjetosAtividades = listOf(
-            ProjetoAtividadeRowState("1095"),
-            ProjetoAtividadeRowState("1096"),
-            ProjetoAtividadeRowState("2096"),
-//            ProjetoAtividadeState("3749"),
-            ProjetoAtividadeRowState("4663"),
-        ))
+            ProjetoAtividadeRowState("4701"), // Compensação tarifária
 
-    private val grupoOnibusFrota = GrupoState(
-        nome = "Ônibus - Frota",
-        listaProjetosAtividades = listOf(
-            ProjetoAtividadeRowState("1800"),
-//            ProjetoAtividadeState("3800"),
-//            ProjetoAtividadeState("3801")
-        ))
-
-    private val grupoOnibusCompensacoes = GrupoState(
-        nome = "Ônibus - Compensação tarifária",
-        listaProjetosAtividades = listOf(
-            ProjetoAtividadeRowState("4701")
-        ))
+            ProjetoAtividadeRowState("2099"), // Manutenção e Operação de Corredores
+            ProjetoAtividadeRowState("4662"), // Manutenção e Operação de Faixas Exclusivas de Ônibus
+            ProjetoAtividadeRowState("4663"), // Contraprestação PPP - Terminais Urbanos
+       ))
 
     private val grupoMeioAmbiente = GrupoState(
         nome = "Meio ambiente",
@@ -136,12 +131,11 @@ class AppViewModel(
         grupoCalcadas,
         grupoSegurancaViaria,
         grupoAsfalto,
-        grupoBicicleta,
-        grupoOnibusCorredores,
-        grupoOnibusTerminais,
-        grupoOnibusFrota,
-        grupoOnibusCompensacoes,
         grupoObrasViarias,
+        grupoFiscalizacao,
+        grupoBicicleta,
+        grupoOnibusInvestimentos,
+        grupoOnibusOperacao,
         grupoMeioAmbiente
     )
 
@@ -174,15 +168,17 @@ class AppViewModel(
 
     suspend fun loadGrupo(grupoState: GrupoState) {
         grupoState.refreshing.value = true
-        grupoState.statePagoTotal.value = LoadingState.Loading()
-        grupoState.stateEmpenhadoLiquidoTotal.value = LoadingState.Loading()
+        grupoState.stateOrcadoAtualizado.value = LoadingState.Loading()
+        grupoState.stateEmpenhadoLiquido.value = LoadingState.Loading()
+        grupoState.statePago.value = LoadingState.Loading()
 
         for (projAtiv in grupoState.listaProjetosAtividades) {
             loadProjetoAtividadeComTotalDespesas(projAtiv)
         }
 
-        var pagoGrupo = 0.0
+        var orcadoAtualizadoGrupo = 0.0
         var empenhadoLiquidoGrupo = 0.0
+        var pagoGrupo = 0.0
 
         var failedDespesasTotal = false
 
@@ -190,6 +186,7 @@ class AppViewModel(
 
             failedDespesasTotal = when (val state = it.stateTotalDespesas.value) {
                 is LoadingState.Success -> {
+                    orcadoAtualizadoGrupo += state.response.orcadoAtualizado
                     empenhadoLiquidoGrupo += state.response.empenhadoLiquido
                     pagoGrupo += state.response.pago
                     false
@@ -199,11 +196,13 @@ class AppViewModel(
         }
 
         if (failedDespesasTotal) {
-            grupoState.stateEmpenhadoLiquidoTotal.value = LoadingState.Failure("Erro ao carregar despesas totais")
-            grupoState.statePagoTotal.value = LoadingState.Failure("Erro ao carregar despesas totais")
+            grupoState.stateOrcadoAtualizado.value = LoadingState.Failure("Erro ao carregar: Orçado Atualizado")
+            grupoState.stateEmpenhadoLiquido.value = LoadingState.Failure("Erro ao carregar: Empenhado Líquido")
+            grupoState.statePago.value = LoadingState.Failure("Erro ao carregar: Pago")
         } else {
-            grupoState.stateEmpenhadoLiquidoTotal.value = LoadingState.Success(empenhadoLiquidoGrupo)
-            grupoState.statePagoTotal.value = LoadingState.Success(pagoGrupo)
+            grupoState.stateOrcadoAtualizado.value = LoadingState.Success(orcadoAtualizadoGrupo)
+            grupoState.stateEmpenhadoLiquido.value = LoadingState.Success(empenhadoLiquidoGrupo)
+            grupoState.statePago.value = LoadingState.Success(pagoGrupo)
         }
 
         grupoState.refreshing.value = false

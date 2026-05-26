@@ -11,8 +11,9 @@ data class GrupoState (
     val nome: String,
     val listaProjetosAtividades: List<ProjetoAtividadeRowState>,
     val refreshing: MutableState<Boolean> = mutableStateOf(false),
-    val statePagoTotal: MutableStateFlow<LoadingState<Double>> = MutableStateFlow(LoadingState.NotStarted()),
-    val stateEmpenhadoLiquidoTotal: MutableStateFlow<LoadingState<Double>> = MutableStateFlow(LoadingState.NotStarted())
+    val statePago: MutableStateFlow<LoadingState<Double>> = MutableStateFlow(LoadingState.NotStarted()),
+    val stateEmpenhadoLiquido: MutableStateFlow<LoadingState<Double>> = MutableStateFlow(LoadingState.NotStarted()),
+    val stateOrcadoAtualizado: MutableStateFlow<LoadingState<Double>> = MutableStateFlow(LoadingState.NotStarted())
 )
 
 data class ProjetoAtividadeRowState (

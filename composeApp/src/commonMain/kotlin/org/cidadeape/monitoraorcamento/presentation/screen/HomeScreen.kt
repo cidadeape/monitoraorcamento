@@ -1,6 +1,5 @@
 package org.cidadeape.monitoraorcamento.presentation.screen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -21,23 +19,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import monitoraorcamento.composeapp.generated.resources.Res
-import monitoraorcamento.composeapp.generated.resources.refresh_24dp
 import org.cidadeape.monitoraorcamento.common.AppColors
 import org.cidadeape.monitoraorcamento.common.LoadingState
 import org.cidadeape.monitoraorcamento.common.TextTitle
 import org.cidadeape.monitoraorcamento.common.Util
 import org.cidadeape.monitoraorcamento.common.colorizedText
-import org.cidadeape.monitoraorcamento.presentation.App
 import org.cidadeape.monitoraorcamento.presentation.AppViewModel
-import org.jetbrains.compose.resources.imageResource
 
 @Composable
 fun HomeScreen(
@@ -100,8 +92,9 @@ fun GrupoRow(
     grupoState: GrupoState
 ) {
 
-    val empenhadoLiquidoTotalState = grupoState.stateEmpenhadoLiquidoTotal.collectAsState()
-    val pagoTotalState = grupoState.statePagoTotal.collectAsState()
+    val orcadoAtualizadoTotalState = grupoState.stateOrcadoAtualizado.collectAsState()
+    val empenhadoLiquidoTotalState = grupoState.stateEmpenhadoLiquido.collectAsState()
+    val pagoTotalState = grupoState.statePago.collectAsState()
 
     Row(
         modifier = Modifier.fillMaxWidth()
@@ -129,13 +122,35 @@ fun GrupoRow(
                 modifier = Modifier.wrapContentWidth().padding(0.dp, 8.dp, 0.dp, 0.dp).align(Alignment.End),
                 fontSize = 12.sp,
                 textAlign = TextAlign.End,
+                text = when (val state = orcadoAtualizadoTotalState.value) {
+                    is LoadingState.Loading ->
+                        colorizedText(text = "Carregando...", color = Color.Black)
+
+                    is LoadingState.Success ->
+                        colorizedText(
+                            text = "Orçado: ${Util.formatToCurrency(state.response)}",
+                            color = Color.Black
+                        )
+
+                    is LoadingState.Failure ->
+                        colorizedText(text = state.message, color = Color.Red)
+
+                    else ->
+                        colorizedText(text = "-", color = Color.Black)
+                }
+            )
+
+            Text(
+                modifier = Modifier.wrapContentWidth().padding(0.dp, 0.dp, 0.dp, 0.dp).align(Alignment.End),
+                fontSize = 12.sp,
+                textAlign = TextAlign.End,
                 text = when (val state = empenhadoLiquidoTotalState.value) {
                     is LoadingState.Loading ->
                         colorizedText(text = "Carregando...", color = Color.Black)
 
                     is LoadingState.Success ->
                         colorizedText(
-                            text = "Empenhado (líquido): ${Util.formatToCurrency(state.response)}",
+                            text = "Empenhado: ${Util.formatToCurrency(state.response)}",
                             color = Color.Black
                         )
 
